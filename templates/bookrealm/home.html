@@ -1,0 +1,57 @@
+<head>
+    <title>Homepage</title>
+</head>
+
+{% block body_block %}
+    <a href={% url 'browse' %}>Browse</a>
+    <h1>Discover Your Next Great Read</h1>
+    <p>Explore millions of books, read views from readersworldwide, and share your own literary jorney</p>
+    <div>
+        <h2>Most Rated Books</h2>
+        <ul>
+            <li>
+                <div>
+                    <p>Project Hail Mary</p>
+                    <p>Michael Chen</p>
+                    <p>5 Stars (3571 reviews)</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <p>Michael Chen</p>
+                    <p>15 Books</p>
+                    <p>Average rating: 4.8</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <h2>Top Authors</h2>
+        <ul>
+            <li>
+                <div>
+                    <p>Michael Chen</p>
+                    <p>15 Books</p>
+                    <p>4.8</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <p>Michael Chen</p>
+                    <p>15 Books</p>
+                    <p>4.8</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <h2>Popular genres</h2>
+        <ul>
+            <li>Fiction</li>
+            <li>Mistery</li>
+            <li>Science Fiction</li>
+        </ul>
+    </div>
+{% endblock %}

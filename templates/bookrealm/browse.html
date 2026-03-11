@@ -1,0 +1,46 @@
+<head>
+    <title>Browse</title>
+</head>
+
+{% block body_block %}
+    <a href="{% url 'home' %}">Home</a>
+    <h1>Browse Books</h1>
+    <div>
+        <h4>Filters</h4>
+        <p>Genres</p>
+        <ul>
+            <li>Fiction</li>
+            <li>Mistery</li>
+            <li>Science Fiction</li>
+        </ul>
+    </div>
+
+    <div>
+        <h2>Sort by</h2>
+        <ul>
+            <li>
+                <p>Highest Rated</p>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <ul>
+            <li>
+                <div>
+                    <p>Project Hail Mary</p>
+                    <p>Michael Chen</p>
+                    <p>5 Stars (3571 reviews)</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <p>Michael Chen</p>
+                    <p>15 Books</p>
+                    <p>Average rating: 4.8</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+{% endblock %}
