@@ -23,7 +23,14 @@ class Book(models.Model):
 
 
 class Review(models.Model):
-    pass
+    rating = models.IntegerField()
+    comment_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user} review on {self.book}"
 
 
 class Follow(models.Model):
