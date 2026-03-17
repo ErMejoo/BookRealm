@@ -24,15 +24,21 @@ def chosen_author(request, user_id):
     except User.DoesNotExist:
         author = None
 
-    return render(request, 'bookrealm/chosenAuthor.html', {'author': author})
+    is_following = False
+    if request.user.is_authenticated and author and request.user != author:
+        is_following = Follow.objects.filter(follower=request.user, following=author).exists()
+    return render(request, "bookrealm/chosenAuthor.html", {'author': author, 'is_following': is_following})
 
 def chosen_book(request, book_id):
     try:
         book = Book.objects.get(id=book_id)
     except Book.DoesNotExist:
         book = None
-
-    return render(request, 'bookrealm/chosenBook.html', {'book': book})
+    
+    in_wishlist = False
+    if request.user.is_authenticated and book:
+        in_wishlist = Wishlist.objects.filter(user=request.user, book=book).exists()
+    return render(request, 'bookrealm/chosenBook.html', {'book': book, 'in_wishlist': in_wishlist})
 
 @login_required
 def follow_user(request, user_id):

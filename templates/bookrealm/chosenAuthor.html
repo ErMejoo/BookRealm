@@ -12,8 +12,11 @@
         <h2>{{ author.username }}</h2>
 
         {% if user.is_authenticated and user != author %}
-            <a href="{% url 'BookRealm:follow_user' author.id %}">Follow</a>
-            <a href="{% url 'BookRealm:unfollow_user' author.id %}">Unfollow</a>
+            {% if is_following %}
+                <a href="{% url 'BookRealm:unfollow_user' author.id %}">Unfollow</a>
+            {% else %}
+                <a href="{% url 'BookRealm:follow_user' author.id %}">Follow</a>
+            {% endif %}
         {% endif %}
     {% else %}
         <p>No author selected.</p>

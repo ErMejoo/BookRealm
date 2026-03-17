@@ -15,9 +15,12 @@
         <h2>{{ book.title }}</h2>
         <p id="book_description">{{ book.description }}</p>
 
-        {% if user.is_authenticated %}
-            <a href="{% url 'BookRealm:add_to_wishlist' book.id %}">Add to Wishlist</a>
+        {% if in_wishlist %}
             <a href="{% url 'BookRealm:remove_from_wishlist' book.id %}?next=book">Remove from Wishlist</a>
+            <br>
+            <a href="{% url 'BookRealm:view_wishlist' %}">Go to Wishlist</a>
+        {% else %}
+            <a href="{% url 'BookRealm:add_to_wishlist' book.id %}">Add to Wishlist</a>
         {% endif %}
     {% else %}
         <p>No book selected.</p> 
