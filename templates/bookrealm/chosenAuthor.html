@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Page</title>
+</head>
+<body>
+    <h1>Author Page</h1>
+
+    {% if author %}
+        <h2>{{ author.username }}</h2>
+
+        {% if user.is_authenticated and user != author %}
+            {% if is_following %}
+                <a href="{% url 'BookRealm:unfollow_user' author.id %}">Unfollow</a>
+            {% else %}
+                <a href="{% url 'BookRealm:follow_user' author.id %}">Follow</a>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <p>No author selected.</p>
+    {% endif %}
+</body>
+</html>
