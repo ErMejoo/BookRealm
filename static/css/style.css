@@ -1,0 +1,227 @@
+:root {
+    --rr-red:      #e8282e;
+    --rr-red-dark: #c01f24;
+    --rr-bg:       #111111;
+    --rr-navbar-h: 64px;
+    --rr-card-bg:  #1a1a1a;
+    --rr-border:   #2a2a2a;
+    --rr-star:     #ffd700;
+    --rr-text:     #f0f0f0;
+    --rr-muted:    #afafaf;
+}
+
+.rr-body {
+    background-color: var(--rr-bg) !important;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.rr-navbar {
+    background-color: var(--rr-bg);
+    border-bottom: 1px solid var(--rr-border);
+    min-height: var(--rr-navbar-h);
+}
+
+.rr-brand {
+    color: var(--rr-red) !important;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.4rem;
+}
+ 
+.rr-search-form {
+    width: 100%;
+    max-width: 520px;
+}
+ 
+@media (max-width: 767px) {
+    .rr-search-form {
+        max-width: 100%;
+        margin: 0.75rem 0 !important;
+    }
+}
+ 
+.rr-search-icon, .rr-search-input {
+    background-color: #1e1e1e !important;
+    border-color: #3a3a3a !important;
+    color: #fff !important;
+}
+ 
+.rr-search-input::placeholder { 
+    color: #888; 
+}
+ 
+.rr-search-input:focus {
+    box-shadow: none !important;
+    border-color: var(--rr-red) !important;
+}
+ 
+.rr-btn-red {
+    background-color: var(--rr-red);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.rr-btn-red:hover {
+    background-color: var(--rr-red-dark);
+    color: #fff;
+}
+ 
+.rr-main {
+    padding-top: var(--rr-navbar-h);
+    min-height: 100vh;
+}
+ 
+.rr-hero-title {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    color: var(--rr-text) !important;  /* ← aggiunto !important */
+    line-height: 1.15;
+    max-width: 90%;
+}
+
+.rr-hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    max-width: 560px;
+}
+ 
+@media (max-width: 575px) {
+    .rr-hero-title br { display: none; }
+    .rr-hero-sub br   { display: none; }
+}
+ 
+.rr-icon-red { 
+    color: var(--rr-red); 
+}
+ 
+.rr-book-card {
+    background-color: var(--rr-card-bg) !important;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+.rr-book-card:hover {
+    transform: translateY(-4px);
+    border: 1px solid var(--rr-red) !important;
+}
+ 
+.rr-book-cover {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+}
+ 
+.rr-book-cover-placeholder {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    background-color: #222;
+}
+ 
+.rr-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+ 
+.rr-stars { 
+    color: var(--rr-star); 
+}
+ 
+.rr-author-card {
+    background-color: var(--rr-card-bg) !important;
+    transition: transform 0.2s;
+}
+.rr-author-card:hover { 
+    transform: translateY(-3px); 
+}
+ 
+.rr-border {
+    border-color: var(--rr-border) !important;
+}
+ 
+.rr-author-photo {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+}
+ 
+.rr-author-photo-placeholder {
+    width: 90px;
+    height: 90px;
+    background-color: #2a2a2a;
+}
+ 
+@media (max-width: 575px) {
+    .rr-author-photo,
+    .rr-author-photo-placeholder {
+        width: 70px;
+        height: 70px;
+    }
+}
+ 
+.rr-genre-btn {
+    background-color: var(--rr-card-bg);
+    color: #fff;
+    border: 1px solid var(--rr-border);
+    transition: border-color 0.2s, color 0.2s;
+}
+.rr-genre-btn:hover {
+    border-color: var(--rr-red);
+    color: var(--rr-red);
+    background-color: var(--rr-card-bg);
+}
+ 
+@media (max-width: 575px) {
+    .rr-genre-btn {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        font-size: 0.85rem;
+    }
+}
+ 
+.rr-footer {
+    border-top: 1px solid var(--rr-border);
+}
+
+@media (max-width: 575px) {
+    .rr-footer .container {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}
+
+.rr-logo-img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.rr-nav-link {
+    color: var(--rr-text) !important;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.rr-nav-link:hover { 
+    color: var(--rr-red) !important; 
+}
+
+.navbar-brand span, .card-title, .fw-bold {
+    color: var(--rr-text) !important;
+}
+
+.text-secondary {
+    color: var(--rr-muted) !important;
+}
+
+.rr-brand, .rr-brand span {
+  color: var(--rr-red) !important;
+}
+
+.rr-view-all {
+  color: var(--rr-text) !important;
+}
+.rr-view-all:hover {
+  color: var(--rr-text) !important;
+}

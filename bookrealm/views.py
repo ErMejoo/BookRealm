@@ -5,13 +5,28 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Follow, Wishlist, Book
+from .models import Follow, Wishlist, Book, Genre
+from django.db.models import Avg, Count
 from datetime import datetime
 from django.contrib import messages
 
 # Create your views here.
 def home(request):
-    response = render(request, 'bookrealm/home.html')
+    context_dict = {}
+    top_books = (
+        Book.objects.annotate(average_rating=Avg('review__rating'),number_reviews=Count('review')).filter(number_reviews__gt=0).order_by('-average_rating')[:10]
+    )
+    top_authors = (
+        User.objects.annotate(
+            average_rating=Avg('book__review__rating'),
+            total_books=Count('book')
+        ).filter(total_books__gt=0).order_by('-average_rating')[:10]
+    )
+    genres = Genre.objects.all()
+    context_dict['top_books'] = top_books
+    context_dict['top_authors'] = top_authors
+    context_dict['genres'] = genres
+    response = render(request, 'bookrealm/home.html', context_dict)
     return response
 
 def browse(request):

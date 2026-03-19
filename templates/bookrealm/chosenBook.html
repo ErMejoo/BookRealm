@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Page</title>
-    <style>
-        #book_description{font-size: 18px;}
-    </style>
-</head>
+{% extends 'bookrealm/bootstrap-base.html' %}
+{% block title %}Chosen-Book{% endblock %}
+
+{% block body_block %}
 <body>
     <h1>Book Page</h1>
 
@@ -32,4 +26,4 @@
         {% endfor %}
     {% endif %}
 </body>
-</html>
+{% endblock %}
