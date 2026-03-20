@@ -1,3 +1,4 @@
+/* Global variables */
 :root {
     --rr-red:      #e8282e;
     --rr-red-dark: #c01f24;
@@ -10,50 +11,76 @@
     --rr-muted:    #afafaf;
 }
 
+/* Base body */
 .rr-body {
     background-color: var(--rr-bg) !important;
     font-family: 'DM Sans', sans-serif;
 }
 
+/* Navbar */
 .rr-navbar {
     background-color: var(--rr-bg);
     border-bottom: 1px solid var(--rr-border);
     min-height: var(--rr-navbar-h);
 }
 
-.rr-brand {
+/* Brand logo text */
+.rr-brand,
+.rr-brand span {
     color: var(--rr-red) !important;
     font-family: 'DM Sans', sans-serif;
     font-size: 1.4rem;
 }
- 
+
+/* Logo image */
+.rr-logo-img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Navbar links */
+.rr-nav-link {
+    color: var(--rr-text) !important;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.rr-nav-link:hover {
+    color: var(--rr-red) !important;
+}
+
+/* Search bar */
 .rr-search-form {
     width: 100%;
     max-width: 520px;
 }
- 
+
 @media (max-width: 767px) {
     .rr-search-form {
         max-width: 100%;
         margin: 0.75rem 0 !important;
     }
 }
- 
-.rr-search-icon, .rr-search-input {
+
+.rr-search-icon,
+.rr-search-input {
     background-color: #1e1e1e !important;
     border-color: #3a3a3a !important;
     color: #fff !important;
 }
- 
-.rr-search-input::placeholder { 
-    color: #888; 
+
+.rr-search-input::placeholder {
+    color: #888;
 }
- 
+
 .rr-search-input:focus {
     box-shadow: none !important;
     border-color: var(--rr-red) !important;
 }
- 
+
+/* Reusable red button */
 .rr-btn-red {
     background-color: var(--rr-red);
     color: #fff;
@@ -66,91 +93,117 @@
     background-color: var(--rr-red-dark);
     color: #fff;
 }
- 
+
+/* Main content */
+
+/* Offset to prevent content from hiding behind fixed navbar */
 .rr-main {
     padding-top: var(--rr-navbar-h);
     min-height: 100vh;
 }
- 
+
+/* Hero section */
 .rr-hero-title {
     font-family: 'DM Sans', sans-serif;
     font-weight: 900;
     font-size: clamp(1.8rem, 5vw, 3.5rem);
-    color: var(--rr-text) !important;  /* ← aggiunto !important */
+    color: var(--rr-text) !important;
     line-height: 1.15;
     max-width: 90%;
 }
 
 .rr-hero-sub {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    max-width: 560px;
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    max-width: 90%;
 }
- 
+
+/* Remove forced line breaks on small screens */
 @media (max-width: 575px) {
-    .rr-hero-title br { display: none; }
-    .rr-hero-sub br   { display: none; }
+    .rr-hero-title br,
+    .rr-hero-sub br {
+        display: none;
+    }
 }
- 
-.rr-icon-red { 
-    color: var(--rr-red); 
+
+/* Section headers */
+.rr-icon-red {
+    color: var(--rr-red);
 }
- 
+
+.rr-view-all {
+    color: var(--rr-text) !important;
+    text-decoration: none;
+}
+
+.rr-view-all:hover {
+    color: var(--rr-muted) !important;
+}
+
+
+/* Book cards */
 .rr-book-card {
     background-color: var(--rr-card-bg) !important;
     transition: transform 0.2s;
     cursor: pointer;
 }
+
 .rr-book-card:hover {
     transform: translateY(-4px);
     border: 1px solid var(--rr-red) !important;
 }
- 
+
+/* Book cover with standard 2:3 ratio */
 .rr-book-cover {
     width: 100%;
     aspect-ratio: 2 / 3;
     object-fit: cover;
 }
- 
+
 .rr-book-cover-placeholder {
     width: 100%;
     aspect-ratio: 2 / 3;
     background-color: #222;
 }
- 
+
+/* Truncate long titles/authors to one line */
 .rr-truncate {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
- 
-.rr-stars { 
-    color: var(--rr-star); 
+
+/* Star rating colour */
+.rr-stars {
+    color: var(--rr-star);
 }
- 
+
+
+/* Author cards */
 .rr-author-card {
     background-color: var(--rr-card-bg) !important;
     transition: transform 0.2s;
 }
-.rr-author-card:hover { 
-    transform: translateY(-3px); 
+
+.rr-author-card:hover {
+    transform: translateY(-3px);
 }
- 
+
 .rr-border {
     border-color: var(--rr-border) !important;
 }
- 
+
 .rr-author-photo {
     width: 90px;
     height: 90px;
     object-fit: cover;
 }
- 
+
 .rr-author-photo-placeholder {
     width: 90px;
     height: 90px;
     background-color: #2a2a2a;
 }
- 
+
 @media (max-width: 575px) {
     .rr-author-photo,
     .rr-author-photo-placeholder {
@@ -158,19 +211,21 @@
         height: 70px;
     }
 }
- 
+
+/* Genre buttons */
 .rr-genre-btn {
     background-color: var(--rr-card-bg);
     color: #fff;
     border: 1px solid var(--rr-border);
     transition: border-color 0.2s, color 0.2s;
 }
+
 .rr-genre-btn:hover {
     border-color: var(--rr-red);
     color: var(--rr-red);
     background-color: var(--rr-card-bg);
 }
- 
+
 @media (max-width: 575px) {
     .rr-genre-btn {
         padding-top: 0.5rem !important;
@@ -178,7 +233,9 @@
         font-size: 0.85rem;
     }
 }
- 
+
+
+/* Footer */
 .rr-footer {
     border-top: 1px solid var(--rr-border);
 }
@@ -191,23 +248,8 @@
     }
 }
 
-.rr-logo-img {
-    width: 36px;
-    height: 36px;
-    object-fit: cover;
-    border-radius: 6px;
-}
-
-.rr-nav-link {
-    color: var(--rr-text) !important;
-    font-weight: 500;
-    transition: color 0.2s;
-}
-.rr-nav-link:hover { 
-    color: var(--rr-red) !important; 
-}
-
-.navbar-brand span, .card-title, .fw-bold {
+.card-title,
+.fw-bold {
     color: var(--rr-text) !important;
 }
 
@@ -215,13 +257,29 @@
     color: var(--rr-muted) !important;
 }
 
-.rr-brand, .rr-brand span {
-  color: var(--rr-red) !important;
+.rr-book-header {
+    background-color: #1c1c1c;
+    border-bottom: 1px solid var(--rr-border);
 }
 
-.rr-view-all {
-  color: var(--rr-text) !important;
+.rr-btn-outline {
+    background-color: #2a2a2a;
+    border: 1px solid var(--rr-border);
+    color: var(--rr-text) !important;
+    font-weight: 600;
+    transition: border-color 0.2s;
 }
-.rr-view-all:hover {
-  color: var(--rr-text) !important;
+
+.rr-btn-dark {
+    background-color: #2a2a2a;
+    border: 1px solid var(--rr-border);
+    color: var(--rr-text) !important;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.rr-review-item {
+    background-color: #2a2a2a;  /* ← era var(--rr-card-bg) che è #1a1a1a, troppo scuro */
+    border: 1px solid var(--rr-border);
+    max-width: 900px;
 }

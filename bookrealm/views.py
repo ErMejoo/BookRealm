@@ -53,7 +53,17 @@ def chosen_book(request, book_id):
     in_wishlist = False
     if request.user.is_authenticated and book:
         in_wishlist = Wishlist.objects.filter(user=request.user, book=book).exists()
-    return render(request, 'bookrealm/chosenBook.html', {'book': book, 'in_wishlist': in_wishlist})
+    reviews = []
+    if book:
+        reviews = book.review_set.select_related('user').order_by('-created_at')
+        if request.user.is_authenticated:
+            in_wishlist = Wishlist.objects.filter(
+                user=request.user, book=book
+            ).exists()
+    return render(request,
+                  'bookrealm/chosenBook.html',
+                  {'book': book, 'in_wishlist': in_wishlist, 'reviews': reviews,}
+                  )
 
 @login_required
 def follow_user(request, user_id):
