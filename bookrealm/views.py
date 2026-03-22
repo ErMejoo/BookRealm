@@ -18,8 +18,8 @@ def home(request):
     )
     top_authors = (
         User.objects.annotate(
-            average_rating=Avg('book__review__rating'),
-            total_books=Count('book')
+            average_rating=Avg('books__review__rating'),
+            total_books=Count('books')
         ).filter(total_books__gt=0).order_by('-average_rating')[:10]
     )
     genres = Genre.objects.all()

@@ -16,8 +16,8 @@ class Book(models.Model):
     numPages = models.IntegerField()
     cover_image = models.ImageField(upload_to='covers/', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books')
+    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True, related_name='books')
     def __str__(self):
         return self.title
 
