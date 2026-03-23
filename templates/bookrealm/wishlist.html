@@ -1,22 +1,53 @@
 {% extends 'bookrealm/bootstrap-base.html' %}
+{% load static %}
 
-{% block title %}My Wishlist{% endblock %}
+{% block title_block %}My Wish List{% endblock %}
 
 {% block body_block %}
-<body>
-    <h1>My Wishlist</h1>
+    <section class="px-4 py-5">
+        <h1 class="fw-bold text-white mb-1">My Wish List</h1>
+        {% if wishlist_items %}
 
-    {% if wishlist_items %}
-        <ul>
-            {% for item in wishlist_items %}
-                <li>
-                    <strong>{{ item.book.title }}</strong> - {{ item.book.description }}
-                    <a href="{% url 'BookRealm:remove_from_wishlist' item.book.id %}">Remove</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Your wishlist is empty.</p>
-    {% endif %}
-</body>
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
+                {% for item in wishlist_items %}
+                    <div class="col">
+                        <div class="card h-100 rr-book-card border-0 rr-hover-red">
+
+                            <!-- Cover -->
+                            <a href="{% url 'BookRealm:chosen_book' item.book.id %}" class="text-decoration-none">
+                                {% if item.book.cover_image %}
+                                    <img src="{{ item.book.cover_image.url }}"
+                                         class="card-img-top rr-book-cover"
+                                         alt="{{ item.book.title }}">
+                                {% else %}
+                                    <div class="rr-book-cover-placeholder d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-book fs-1 text-secondary"></i>
+                                    </div>
+                                {% endif %}
+                            </a>
+
+                            <!-- Info -->
+                            <div class="card-body p-2">
+                                <p class="fw-bold mb-1 rr-truncate text-white">{{ item.book.title }}</p>
+                                <p class="text-secondary small mb-2 rr-truncate">{{ item.book.created_by.username }}</p>
+                                <a href="{% url 'BookRealm:remove_from_wishlist' item.book.id %}"
+                                   class="btn rr-btn-outline w-100 py-1"
+                                   style="font-size: 0.75rem;">
+                                    <i class="bi bi-bookmark-dash me-1"></i>Remove
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-bookmark text-secondary" style="font-size: 3rem;"></i>
+                <p class="text-secondary mt-3">Your reading list is empty.</p>
+                <a href="{% url 'BookRealm:home' %}" class="btn rr-btn-red px-4 mt-2">Discover Books</a>
+            </div>
+        {% endif %}
+    </section>
 {% endblock %}

@@ -14,19 +14,33 @@ from django.contrib import messages
 def home(request):
     context_dict = {}
     top_books = (
-        Book.objects.annotate(average_rating=Avg('review__rating'),number_reviews=Count('review')).filter(number_reviews__gt=0).order_by('-average_rating')[:10]
+        Book.objects.annotate(
+            average_rating=Avg('review__rating'),
+            number_reviews=Count('review')
+        ).filter(number_reviews__gt=0).order_by('-average_rating')[:10]
     )
+    # Book rating percentage
+    for book in top_books:
+        book.rating_percent = (book.average_rating or 0) * 20
+        
     top_authors = (
         User.objects.annotate(
             average_rating=Avg('book__review__rating'),
-            total_books=Count('book')
+            total_books=Count('book', distinct=True)
         ).filter(total_books__gt=0).order_by('-average_rating')[:10]
     )
+    # Author rating percentage
+    for author in top_authors:
+        author.rating_percent = (author.average_rating or 0) * 20
+
     genres = Genre.objects.all()
     context_dict['top_books'] = top_books
     context_dict['top_authors'] = top_authors
     context_dict['genres'] = genres
-    response = render(request, 'bookrealm/home.html', context_dict)
+    return render(request, 'bookrealm/home.html', context_dict)
+
+def contact_us(request):
+    response = render(request, 'bookrealm/contactUs.html')
     return response
 
 def browse(request):
@@ -38,12 +52,30 @@ def chosen_author(request, user_id):
         author = User.objects.get(id=user_id)
     except User.DoesNotExist:
         author = None
-
     is_following = False
-    if request.user.is_authenticated and author and request.user != author:
-        is_following = Follow.objects.filter(follower=request.user, following=author).exists()
-    return render(request, "bookrealm/chosenAuthor.html", {'author': author, 'is_following': is_following})
-
+    books = []
+    avg_rating = 0
+    total_books = 0
+    if author:
+        books = Book.objects.filter(created_by=author).annotate(
+            average_rating=Avg('review__rating'),
+            number_reviews=Count('review')
+        )
+        total_books = books.count()
+        avg = books.aggregate(avg=Avg('review__rating'))['avg']
+        avg_rating = round(avg, 1) if avg else 0
+        if request.user.is_authenticated and request.user != author:
+            is_following = Follow.objects.filter(
+                follower=request.user, following=author
+            ).exists()
+    return render(request, "bookrealm/chosenAuthor.html", {
+        'author': author,
+        'is_following': is_following,
+        'books': books,
+        'total_books': total_books,
+        'avg_rating': avg_rating,
+    })
+    
 def chosen_book(request, book_id):
     try:
         book = Book.objects.get(id=book_id)
@@ -105,5 +137,22 @@ def view_wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=request.user).select_related('book')
     return render(request, 'bookrealm/wishlist.html', {'wishlist_items': wishlist_items})
 
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('BookRealm:home'))
 
-    
+@login_required
+def my_books(request):
+    response = render(request, 'bookrealm/myBooks.html')
+    return response
+
+@login_required
+def my_reviews(request):
+    response = render(request, 'bookrealm/myReviews.html')
+    return response
+
+@login_required
+def publish_book(request):
+    response = render(request, 'bookrealm/publishBook.html')
+    return response

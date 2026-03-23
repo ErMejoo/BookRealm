@@ -11,12 +11,6 @@
     <p class="text-secondary mt-3 rr-hero-sub">
       Explore millions of books, read reviews from readers worldwide and share your own literary journey.
     </p>
-    {% if not user.is_authenticated %}
-      <div class="mt-4 d-flex gap-3">
-        <a href="{% url 'registration_register' %}" class="btn rr-btn-red px-4">Get Started</a>
-        <a href="{% url 'auth_login' %}" class="btn btn-outline-secondary px-4">Sign In</a>
-      </div>
-    {% endif %}
   </section>
  
   <!-- TOP RATED BOOKS -->
@@ -35,7 +29,7 @@
       {% for book in top_books %}
         <div class="col">
           <a href="{% url 'BookRealm:chosen_book' book.id %}" class="text-decoration-none text-white">
-            <div class="card h-100 rr-book-card border-0">
+            <div class="card h-100 rr-book-card border-0 rr-hover-red">
  
               {% if book.cover_image %}
                 <img src="{{ book.cover_image.url }}"
@@ -50,10 +44,12 @@
               <div class="card-body p-2">
                 <p class="card-title fw-semibold mb-1 rr-truncate">{{ book.title }}</p>
                 <p class="card-text text-secondary small mb-1 rr-truncate">{{ book.author }}</p>
-                <p class="card-text small rr-stars">
-                  ★★★★★
-                  <span class="text-secondary">({{ book.number_reviews }})</span>
-                </p>
+                <div class="card-text small mb-1">
+                  <div class="rr-star-rating">
+                      <div class="rr-star-rating-inner" style="width: {{ book.rating_percent }}%;">★★★★★</div>
+                  </div>
+                  <span class="text-secondary ms-1">({{ book.number_reviews }})</span>
+                </div>
               </div>
  
             </div>
@@ -84,25 +80,32 @@
       {% for author in top_authors %}
         <div class="col">
           <a href="{% url 'BookRealm:chosen_author' author.id %}" class="text-decoration-none text-white">
-            <div class="card rr-author-card border rr-border text-center p-4 h-100">
+            <div class="card rr-author-card border-0 text-center p-4 h-100 rr-hover-red">
  
               {% if author.photo %}
                 <img src="{{ author.photo.url }}"
                      class="rounded-circle mx-auto mb-3 rr-author-photo"
-                     alt="{{ author.name }}">
+                     alt="{{ author.username }}">
               {% else %}
                 <div class="rounded-circle mx-auto mb-3 rr-author-photo-placeholder d-flex align-items-center justify-content-center">
                   <i class="bi bi-person-fill fs-2 text-secondary"></i>
                 </div>
               {% endif %}
  
-              <p class="fw-bold mb-2">{{ author.name }}</p>
+              <p class="fw-bold mb-2">{{ author.username }}</p>
               <p class="text-secondary small mb-2">
-                <i class="bi bi-book-half rr-icon-red me-1"></i>{{ author.book_count }} books
+                <i class="bi bi-book-half rr-icon-red me-1"></i>
+                {{ author.total_books }} book{{ author.total_books|pluralize }}
               </p>
-              <p class="rr-stars mb-0">
-                ★★★★★ <span class="text-secondary">{{ author.avg_rating|floatformat:1 }}</span>
-              </p>
+
+              <div class="d-flex flex-column align-items-center">
+                  <div class="rr-star-rating">
+                      <div class="rr-star-rating-inner" style="width: {{ author.rating_percent }}%;">
+                          ★★★★★
+                      </div>
+                  </div>
+                  <span class="text-secondary small mt-1">{{ author.average_rating|default:"0"|floatformat:1 }}</span>
+              </div>
  
             </div>
           </a>
@@ -125,7 +128,7 @@
       {% for genre in genres %}
         <div class="col">
           <a href="{% url 'BookRealm:browse' %}?genre={{ genre.slug }}"
-             class="btn rr-genre-btn w-100 py-3 fw-semibold">
+             class="btn rr-genre-btn w-100 py-3 fw-semibold rr-hover-red d-block">
             {{ genre.name }}
           </a>
         </div>

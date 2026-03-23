@@ -21,13 +21,13 @@
 .rr-navbar {
     background-color: var(--rr-bg);
     border-bottom: 1px solid var(--rr-border);
-    min-height: var(--rr-navbar-h);
+    min-height: var(--rr-navbar-h); /* min-height allows mobile menu to expand */
 }
 
 /* Brand logo text */
 .rr-brand,
 .rr-brand span {
-    color: var(--rr-red) !important;
+    color: var(--rr-red) !important; /* overrides Bootstrap navbar-dark white */
     font-family: 'DM Sans', sans-serif;
     font-size: 1.4rem;
 }
@@ -46,7 +46,6 @@
     font-weight: 500;
     transition: color 0.2s;
 }
-
 .rr-nav-link:hover {
     color: var(--rr-red) !important;
 }
@@ -57,6 +56,7 @@
     max-width: 520px;
 }
 
+/* Full width on mobile when navbar is expanded */
 @media (max-width: 767px) {
     .rr-search-form {
         max-width: 100%;
@@ -70,17 +70,15 @@
     border-color: #3a3a3a !important;
     color: #fff !important;
 }
-
 .rr-search-input::placeholder {
     color: #888;
 }
-
 .rr-search-input:focus {
     box-shadow: none !important;
     border-color: var(--rr-red) !important;
 }
 
-/* Reusable red button */
+/* Buttons */
 .rr-btn-red {
     background-color: var(--rr-red);
     color: #fff;
@@ -94,11 +92,44 @@
     color: #fff;
 }
 
-/* Main content */
+.rr-btn-outline {
+    background-color: #2a2a2a;
+    border: 1px solid var(--rr-border);
+    color: var(--rr-text) !important;
+    font-weight: 600;
+    transition: border-color 0.2s;
+}
 
-/* Offset to prevent content from hiding behind fixed navbar */
+.rr-btn-outline:hover {
+    border-color: var(--rr-red);
+    color: var(--rr-text) !important;
+}
+
+.rr-btn-dark {
+    background-color: #2a2a2a;
+    border: 1px solid var(--rr-border);
+    color: var(--rr-text) !important;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.rr-btn-dark:hover {
+    background-color: #333;
+    color: var(--rr-text) !important;
+}
+
+.rr-link-red {
+    color: var(--rr-red);
+    text-decoration: none;
+}
+
+.rr-link-red:hover {
+    color: var(--rr-red-dark);
+}
+
+/* Main content */
 .rr-main {
-    padding-top: var(--rr-navbar-h);
+    padding-top: var(--rr-navbar-h); /* offset for fixed navbar */
     min-height: 100vh;
 }
 
@@ -106,7 +137,7 @@
 .rr-hero-title {
     font-family: 'DM Sans', sans-serif;
     font-weight: 900;
-    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    font-size: clamp(1.8rem, 5vw, 3.5rem); /* responsive font size */
     color: var(--rr-text) !important;
     line-height: 1.15;
     max-width: 90%;
@@ -139,17 +170,10 @@
     color: var(--rr-muted) !important;
 }
 
-
-/* Book cards */
+/* Book cards (home grid) */
 .rr-book-card {
     background-color: var(--rr-card-bg) !important;
-    transition: transform 0.2s;
     cursor: pointer;
-}
-
-.rr-book-card:hover {
-    transform: translateY(-4px);
-    border: 1px solid var(--rr-red) !important;
 }
 
 /* Book cover with standard 2:3 ratio */
@@ -158,7 +182,6 @@
     aspect-ratio: 2 / 3;
     object-fit: cover;
 }
-
 .rr-book-cover-placeholder {
     width: 100%;
     aspect-ratio: 2 / 3;
@@ -176,20 +199,20 @@
 .rr-stars {
     color: var(--rr-star);
 }
+.rr-star-empty {
+    color: var(--rr-muted);
+    cursor: pointer;
+}
 
 
 /* Author cards */
 .rr-author-card {
     background-color: var(--rr-card-bg) !important;
-    transition: transform 0.2s;
-}
-
-.rr-author-card:hover {
-    transform: translateY(-3px);
+    cursor: pointer;
 }
 
 .rr-border {
-    border-color: var(--rr-border) !important;
+    border-color: var(--rr-border);
 }
 
 .rr-author-photo {
@@ -217,13 +240,6 @@
     background-color: var(--rr-card-bg);
     color: #fff;
     border: 1px solid var(--rr-border);
-    transition: border-color 0.2s, color 0.2s;
-}
-
-.rr-genre-btn:hover {
-    border-color: var(--rr-red);
-    color: var(--rr-red);
-    background-color: var(--rr-card-bg);
 }
 
 @media (max-width: 575px) {
@@ -232,6 +248,63 @@
         padding-bottom: 0.5rem !important;
         font-size: 0.85rem;
     }
+}
+
+/* Book detail page */
+.rr-book-header {
+    background-color: #1c1c1c;
+    border-bottom: 1px solid var(--rr-border);
+}
+.rr-detail-cover {
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+}
+.rr-detail-cover-placeholder {
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 2 / 3;
+    background-color: #2a2a2a;
+}
+
+/* Genre tags (small bordered labels) */
+.rr-genre-tag {
+    border: 1px solid var(--rr-border);
+    border-radius: 4px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--rr-text);
+}
+
+/* Review form */
+.rr-review-form {
+    background-color: var(--rr-card-bg);
+    border: 1px solid var(--rr-border);
+    max-width: 900px;
+}
+
+.rr-review-textarea {
+    background-color: #222 !important;
+    border-color: var(--rr-border) !important;
+    color: var(--rr-text) !important;
+    resize: vertical;
+}
+
+.rr-review-textarea::placeholder {
+    color: var(--rr-muted);
+}
+
+.rr-review-textarea:focus {
+    box-shadow: none !important;
+    border-color: var(--rr-red) !important;
+}
+
+/* Individual review card */
+.rr-review-item {
+    background-color: #2a2a2a;
+    border: 1px solid var(--rr-border);
+    max-width: 900px;
 }
 
 
@@ -248,38 +321,119 @@
     }
 }
 
+/* Force white on elements Bootstrap colours as grey in dark context */
 .card-title,
 .fw-bold {
     color: var(--rr-text) !important;
 }
 
+/* Standardise muted text colour across all Bootstrap components */
 .text-secondary {
     color: var(--rr-muted) !important;
 }
-
-.rr-book-header {
-    background-color: #1c1c1c;
-    border-bottom: 1px solid var(--rr-border);
+/* Reset dei conflitti */
+.rr-book-card, .rr-author-card, .rr-genre-btn {
+    transition: all 0.3s ease !important;
 }
 
-.rr-btn-outline {
-    background-color: #2a2a2a;
-    border: 1px solid var(--rr-border);
+/* Animazione Card: Alzamento e Bordo Rosso */
+.rr-hover-red:hover {
+    transform: translateY(-10px) !important;
+    box-shadow: 0 0 0 2px var(--rr-red) !important;
+    border-color: var(--rr-red) !important;
+    z-index: 5;
+    position: relative;
+}
+
+/* Colore ROSSO selettivo all'hover */
+/* Colpisce il titolo del libro, il nome dell'autore e il testo del genere */
+.rr-hover-red:hover .card-title, 
+.rr-hover-red:hover .fw-bold,
+.rr-genre-btn.rr-hover-red:hover {
+    color: var(--rr-red) !important;
+}
+
+.rr-star-rating {
+    display: inline-block;
+    position: relative;
+    font-family: 'Arial', sans-serif; /* Font standard per evitare disallineamenti */
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+/* Stelle vuote (Sotto) - Usiamo pseudo-elemento per il grigio */
+.rr-star-rating::before {
+    content: "★★★★★";
+    color: var(--rr-muted);
+}
+
+/* Stelle piene (Sopra) - NON mettere 'content' qui! */
+.rr-star-rating-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--rr-star);
+    /* content: "★★★★★";  <-- CANCELLA O COMMENTA QUESTA RIGA */
+}
+
+/* Fix per il rosso selettivo (Titoli, Autori, Generi) */
+.rr-hover-red:hover .card-title, 
+.rr-hover-red:hover .fw-bold,
+.rr-genre-btn:hover {
+    color: var(--rr-red) !important;
+}
+
+/* Link autore nel dettaglio libro */
+.rr-author-link {
     color: var(--rr-text) !important;
-    font-weight: 600;
-    transition: border-color 0.2s;
+    transition: color 0.3s ease;
 }
 
-.rr-btn-dark {
+.rr-author-link:hover {
+    color: var(--rr-red) !important;
+}
+
+/* Box autore opzionale */
+.rr-author-box {
+    background-color: #1a1a1a;
+    border: 1px solid var(--rr-border);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.rr-author-box:hover {
+    border-color: var(--rr-red);
+    transform: translateX(5px);
+}
+
+/* Effetto Hover sul pulsante autore */
+.rr-author-btn {
+    background-color: #1c1c1c; /* Colore leggermente diverso dal fondo card */
+    transition: all 0.2s ease-in-out;
+}
+
+.rr-author-btn:hover {
+    background-color: #252525;
+    border-color: var(--rr-red) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.rr-author-btn:hover .text-white {
+    color: var(--rr-red) !important;
+}
+
+/* Animazione icona al passaggio */
+.rr-author-btn:hover .bg-danger {
+    transform: scale(1.05);
+    background-color: var(--rr-red-dark) !important;
+}
+
+.rr-author-detail-photo {
+    width: 150px;
+    height: 150px;
     background-color: #2a2a2a;
-    border: 1px solid var(--rr-border);
-    color: var(--rr-text) !important;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-.rr-review-item {
-    background-color: #2a2a2a;  /* ← era var(--rr-card-bg) che è #1a1a1a, troppo scuro */
-    border: 1px solid var(--rr-border);
-    max-width: 900px;
+    overflow: hidden;
 }

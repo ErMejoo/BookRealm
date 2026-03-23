@@ -17,7 +17,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <!-- Custom styles (solo ciò che Bootstrap non copre) -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
 
 </head>
  
@@ -71,14 +71,14 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="btn rr-btn-red px-3" href="#">Logout</a>
+              <a class="btn rr-btn-red px-3" href="{% url 'BookRealm:logout' %}">Logout</a>
             </li>
           {% else %}
             <li class="nav-item">
               <a class="btn rr-btn-red px-3" href="#">Login</a>
             </li>
             <li class="nav-item">
-              <a class="btn rr-btn-red px-3" href="{% url 'registration_register' %}">Sign Up</a>
+              <a class="btn rr-btn-red px-3" href="#">Sign Up</a>
             </li>
           {% endif %}
         </ul>
@@ -96,7 +96,7 @@
     <!-- Footer -->
     <footer class="rr-footer py-3 mt-4">
       <div class="container d-flex justify-content-between">
-        <a href="" class="btn rr-btn-red px-3">Contact us</a>
+        <a href="{% url 'BookRealm:contact_us' %}" class="btn rr-btn-red px-3">Contact us</a>
       </div>
     </footer>
  
