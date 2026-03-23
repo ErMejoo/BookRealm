@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Follow, Wishlist, Book, Genre
+from .models import Follow, Wishlist, Book, Genre, Review
 from django.db.models import Avg, Count
 from datetime import datetime
 from django.contrib import messages
@@ -32,7 +32,6 @@ def home(request):
     # Author rating percentage
     for author in top_authors:
         author.rating_percent = (author.average_rating or 0) * 20
-
     genres = Genre.objects.all()
     context_dict['top_books'] = top_books
     context_dict['top_authors'] = top_authors
@@ -96,6 +95,32 @@ def chosen_book(request, book_id):
                   'bookrealm/chosenBook.html',
                   {'book': book, 'in_wishlist': in_wishlist, 'reviews': reviews,}
                   )
+
+@login_required
+def add_review(request, book_id):
+    if request.method == "POST":
+        try:
+            book = Book.objects.get(id=book_id)
+        except Book.DoesNotExist:
+            return redirect('BookRealm:home')
+        
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment_text')
+
+        if rating and comment:
+            Review.objects.update_or_create(
+                user=request.user,
+                book=book,
+                defaults={
+                    'rating': int(rating),
+                    'comment_text': comment
+                }
+            )
+            messages.success(request, "Review added successfully!")
+
+        return redirect(reverse('BookRealm:chosen_book', args=[book_id]))
+    
+    return redirect('BookRealm:home')
 
 @login_required
 def follow_user(request, user_id):

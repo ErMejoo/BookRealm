@@ -109,22 +109,28 @@
             {% if user.is_authenticated %}
                 <div class="rr-review-form p-4 rounded">
     
-                    <!-- Star rating -->
-                    <p class="fw-semibold mb-2 text-white">Your Rating</p>
-                    <div class="rr-star-picker mb-4">
-                        <span class="rr-star-empty fs-4">☆</span>
-                        <span class="rr-star-empty fs-4">☆</span>
-                        <span class="rr-star-empty fs-4">☆</span>
-                        <span class="rr-star-empty fs-4">☆</span>
-                        <span class="rr-star-empty fs-4">☆</span>
-                    </div>
-    
-                    <!-- Review text -->
-                    <p class="fw-semibold mb-2 text-white">Your Review</p>
-                    <textarea class="form-control rr-review-textarea mb-3"
-                            rows="4"
-                            placeholder="Share your thoughts about this book..."></textarea>
-                    <button class="btn rr-btn-red px-4">Publish Your Review</button>
+                    <form method="POST" action="{% url 'BookRealm:add_review' book.id %}">
+                        {% csrf_token %}
+
+                        <p class="fw-semibold mb-2 text-white">Your Rating</p>
+                        <select name="rating" class="form-control mb-3" required>
+                            <option value="">Select rating</option>
+                            <option value="1">★☆☆☆☆ (1)</option>
+                            <option value="2">★★☆☆☆ (2)</option>
+                            <option value="3">★★★☆☆ (3)</option>
+                            <option value="4">★★★★☆ (4)</option>
+                            <option value="5">★★★★★ (5)</option>
+                        </select>
+                        
+                        <p class="fw-semibold mb-2 text-white">Your Review</p>
+                        <textarea name="comment_text"
+                                  class="form-control rr-review-textarea mb-3"
+                                  rows="4"
+                                  placeholder="Share your thoughts about this book..."
+                                  required></textarea>
+                        
+                        <button type="submit" class="btn rr-btn-red px-4">Publish Review</button>
+                    </form>
                 </div>
             {% else %}
                 <p class="text-secondary">
