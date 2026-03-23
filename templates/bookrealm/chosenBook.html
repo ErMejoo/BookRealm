@@ -6,7 +6,7 @@
 {% block body_block %}
  
 {% if book %}
- 
+
     <!--  BOOK HEADER SECTION  -->
     <section class="rr-book-header py-5 px-4">
         <div class="container-fluid">
@@ -50,10 +50,17 @@
  
                     <!-- Rating -->
                     <div class="d-flex align-items-center gap-3 mb-4">
-                        <span class="rr-stars fs-4">★★★★★</span>
-                        <span class="text-secondary">({{ book.review_set.count }} reviews)</span>
+                        <div class="rr-star-rating fs-4">
+                            <div class="rr-star-rating-inner" style="width: {{ book.rating_percent }}%;">★★★★★</div>
+                        </div>
+                        <span class="text-secondary">({{ book.review_count }} reviews)</span>
                     </div>
- 
+
+                    {% if book.genre %}
+                        <div class="mb-4">
+                            <span class="rr-genre-tag">{{ book.genre.name }}</span>
+                        </div>
+                    {% endif %}
                     <!-- Description -->
                     <p class="text-secondary mb-4" style="max-width: 780px; line-height: 1.7;">
                         {{ book.description }}
@@ -105,7 +112,11 @@
     <section class="px-4 py-5">
         <div class="container-fluid">
  
-            <h2 class="fw-bold mb-4">Write a Review</h2>
+            {% if user_review %}
+                <h2 class="fw-bold mb-4 text-white">Change your Review</h2>
+            {% else %}
+                <h2 class="fw-bold mb-4 text-white">Write a Review</h2>
+            {% endif %}
             {% if user.is_authenticated %}
                 <div class="rr-review-form p-4 rounded">
     

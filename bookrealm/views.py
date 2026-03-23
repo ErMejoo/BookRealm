@@ -25,9 +25,9 @@ def home(request):
         
     top_authors = (
         User.objects.annotate(
-            average_rating=Avg('book__review__rating'),
-            total_books=Count('book', distinct=True)
-        ).filter(total_books__gt=0).order_by('-average_rating')[:10]
+            average_rating=Avg('books__review__rating'),
+            total_books=Count('books', distinct=True)
+            ).filter(total_books__gt=0).order_by('-average_rating')[:10]
     )
     # Author rating percentage
     for author in top_authors:
@@ -77,10 +77,13 @@ def chosen_author(request, user_id):
     
 def chosen_book(request, book_id):
     try:
-        book = Book.objects.get(id=book_id)
+        book = Book.objects.annotate(
+        average_rating=Avg('review__rating'),
+        review_count=Count('review')
+        ).get(id=book_id)
+        book.rating_percent = (book.average_rating or 0) * 20
     except Book.DoesNotExist:
         book = None
-    
     in_wishlist = False
     if request.user.is_authenticated and book:
         in_wishlist = Wishlist.objects.filter(user=request.user, book=book).exists()
@@ -91,10 +94,15 @@ def chosen_book(request, book_id):
             in_wishlist = Wishlist.objects.filter(
                 user=request.user, book=book
             ).exists()
-    return render(request,
-                  'bookrealm/chosenBook.html',
-                  {'book': book, 'in_wishlist': in_wishlist, 'reviews': reviews,}
-                  )
+    user_review = None
+    if request.user.is_authenticated and book:
+        user_review = Review.objects.filter(user=request.user, book=book).first()
+    return render(request, 'bookrealm/chosenBook.html', {
+        'book': book,
+        'in_wishlist': in_wishlist,
+        'reviews': reviews,
+        'user_review': user_review,
+    })
 
 @login_required
 def add_review(request, book_id):

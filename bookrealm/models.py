@@ -25,7 +25,7 @@ class Book(models.Model):
 class Review(models.Model):
     rating = models.IntegerField()
     comment_text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
