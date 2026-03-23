@@ -125,11 +125,11 @@
                         <p class="fw-semibold mb-2 text-white">Your Rating</p>
                         <select name="rating" class="form-select rr-search-input mb-3" required>
                             <option value="">Select rating</option>
-                            <option value="1">★☆☆☆☆ (1)</option>
-                            <option value="2">★★☆☆☆ (2)</option>
-                            <option value="3">★★★☆☆ (3)</option>
-                            <option value="4">★★★★☆ (4)</option>
-                            <option value="5">★★★★★ (5)</option>
+                            <option value="1" {% if user_review and user_review.rating == 1 %}selected{% endif %}>★☆☆☆☆ (1)</option>
+                            <option value="2" {% if user_review and user_review.rating == 2 %}selected{% endif %}>★★☆☆☆ (2)</option>
+                            <option value="3" {% if user_review and user_review.rating == 3 %}selected{% endif %}>★★★☆☆ (3)</option>
+                            <option value="4" {% if user_review and user_review.rating == 4 %}selected{% endif %}>★★★★☆ (4)</option>
+                            <option value="5" {% if user_review and user_review.rating == 5 %}selected{% endif %}>★★★★★ (5)</option>
                         </select>
                         
                         <p class="fw-semibold mb-2 text-white">Your Review</p>
@@ -137,9 +137,11 @@
                                   class="form-control rr-review-textarea mb-3"
                                   rows="4"
                                   placeholder="Share your thoughts about this book..."
-                                  required></textarea>
+                                  required>{% if user_review %}{{ user_review.comment_text }}{% endif %}</textarea>
                         
-                        <button type="submit" class="btn rr-btn-red px-4">Publish Review</button>
+                        <button type="submit" class="btn rr-btn-red px-4">
+                            {% if user_review %}Update Review{% else %}Publish Review{% endif %}
+                        </button>
                     </form>
                 </div>
             {% else %}
