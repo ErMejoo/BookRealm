@@ -1,0 +1,27 @@
+<!-- Reusable book card -->
+<div class="card h-100 rr-book-card border-0 rr-hover-red">
+
+    <a href="{% url 'BookRealm:chosen_book' book.id %}" class="text-decoration-none">
+        {% if book.cover_image %}
+            <img src="{{ book.cover_image.url }}"
+                 class="card-img-top rr-book-cover"
+                 alt="{{ book.title }}">
+        {% else %}
+            <div class="rr-book-cover-placeholder d-flex align-items-center justify-content-center">
+                <i class="bi bi-book fs-1 text-secondary"></i>
+            </div>
+        {% endif %}
+    </a>
+
+    <div class="card-body p-2">
+        <p class="fw-bold mb-1 rr-truncate text-white">{{ book.title }}</p>
+        <p class="text-secondary small mb-1 rr-truncate">{{ book.created_by.username }}</p>
+        <div class="d-flex align-items-center gap-1">
+            <div class="rr-star-rating">
+                <div class="rr-star-rating-inner" style="width: {{ book.rating_percent }}%;">★★★★★</div>
+            </div>
+            <span class="text-secondary small">({{ book.number_reviews|default:"0" }})</span>
+        </div>
+    </div>
+
+</div>

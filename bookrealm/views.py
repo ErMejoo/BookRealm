@@ -43,8 +43,38 @@ def contact_us(request):
     return response
 
 def browse(request):
-    response = render(request, 'bookrealm/browse.html')
-    return response
+    genre_id = request.GET.get('genre', '')
+    sort = request.GET.get('sort', 'rating')
+
+    books = Book.objects.annotate(
+        average_rating=Avg('review__rating'),
+        number_reviews=Count('review')
+    )
+
+    selected_genre = None
+    if genre_id:
+        try:
+            selected_genre = Genre.objects.get(id=genre_id)
+            books = books.filter(genre=selected_genre)
+        except Genre.DoesNotExist:
+            pass
+
+    if sort == 'newest':
+        books = books.order_by('-created_at')
+    else:
+        books = books.order_by('-average_rating')
+
+    for book in books:
+        book.rating_percent = (book.average_rating or 0) * 20
+
+    genres = Genre.objects.all()
+
+    return render(request, 'bookrealm/browse.html', {
+        'books': books,
+        'genres': genres,
+        'selected_genre': selected_genre,
+        'sort': sort,
+    })
 
 def chosen_author(request, user_id):
     try:

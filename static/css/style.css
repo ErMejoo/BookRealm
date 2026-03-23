@@ -21,18 +21,16 @@
 .rr-navbar {
     background-color: var(--rr-bg);
     border-bottom: 1px solid var(--rr-border);
-    min-height: var(--rr-navbar-h); /* min-height allows mobile menu to expand */
+    min-height: var(--rr-navbar-h);
 }
 
-/* Brand logo text */
 .rr-brand,
 .rr-brand span {
-    color: var(--rr-red) !important; /* overrides Bootstrap navbar-dark white */
+    color: var(--rr-red) !important;
     font-family: 'DM Sans', sans-serif;
     font-size: 1.4rem;
 }
 
-/* Logo image */
 .rr-logo-img {
     width: 36px;
     height: 36px;
@@ -40,12 +38,12 @@
     border-radius: 6px;
 }
 
-/* Navbar links */
 .rr-nav-link {
     color: var(--rr-text) !important;
     font-weight: 500;
     transition: color 0.2s;
 }
+
 .rr-nav-link:hover {
     color: var(--rr-red) !important;
 }
@@ -56,7 +54,6 @@
     max-width: 520px;
 }
 
-/* Full width on mobile when navbar is expanded */
 @media (max-width: 767px) {
     .rr-search-form {
         max-width: 100%;
@@ -70,9 +67,11 @@
     border-color: #3a3a3a !important;
     color: #fff !important;
 }
+
 .rr-search-input::placeholder {
     color: #888;
 }
+
 .rr-search-input:focus {
     box-shadow: none !important;
     border-color: var(--rr-red) !important;
@@ -129,7 +128,7 @@
 
 /* Main content */
 .rr-main {
-    padding-top: var(--rr-navbar-h); /* offset for fixed navbar */
+    padding-top: var(--rr-navbar-h);
     min-height: 100vh;
 }
 
@@ -137,7 +136,7 @@
 .rr-hero-title {
     font-family: 'DM Sans', sans-serif;
     font-weight: 900;
-    font-size: clamp(1.8rem, 5vw, 3.5rem); /* responsive font size */
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
     color: var(--rr-text) !important;
     line-height: 1.15;
     max-width: 90%;
@@ -148,7 +147,6 @@
     max-width: 90%;
 }
 
-/* Remove forced line breaks on small screens */
 @media (max-width: 575px) {
     .rr-hero-title br,
     .rr-hero-sub br {
@@ -170,49 +168,85 @@
     color: var(--rr-muted) !important;
 }
 
-/* Book cards (home grid) */
+/* Hover animation — raises element and shows red outline */
+.rr-book-card,
+.rr-author-card,
+.rr-genre-btn {
+    transition: all 0.3s ease !important;
+}
+
+.rr-hover-red:hover {
+    transform: translateY(-10px) !important;
+    box-shadow: 0 0 0 2px var(--rr-red) !important;
+    z-index: 5;
+    position: relative;
+}
+
+.rr-hover-red:hover .fw-bold {
+    color: var(--rr-red) !important;
+}
+
+
+/* Book cards */
 .rr-book-card {
     background-color: var(--rr-card-bg) !important;
     cursor: pointer;
 }
 
-/* Book cover with standard 2:3 ratio */
 .rr-book-cover {
     width: 100%;
     aspect-ratio: 2 / 3;
     object-fit: cover;
 }
+
 .rr-book-cover-placeholder {
     width: 100%;
     aspect-ratio: 2 / 3;
     background-color: #222;
 }
 
-/* Truncate long titles/authors to one line */
 .rr-truncate {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Star rating colour */
+/* Star ratings */
 .rr-stars {
     color: var(--rr-star);
 }
+
 .rr-star-empty {
     color: var(--rr-muted);
     cursor: pointer;
 }
 
+.rr-star-rating {
+    display: inline-block;
+    position: relative;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.rr-star-rating::before {
+    content: "★★★★★";
+    color: var(--rr-muted);
+}
+
+.rr-star-rating-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--rr-star);
+}
 
 /* Author cards */
 .rr-author-card {
     background-color: var(--rr-card-bg) !important;
     cursor: pointer;
-}
-
-.rr-border {
-    border-color: var(--rr-border);
 }
 
 .rr-author-photo {
@@ -237,30 +271,30 @@
 
 /* Genre buttons */
 .rr-genre-btn {
-    background-color: var(--rr-card-bg);
-    color: #fff;
-    border: 1px solid var(--rr-border);
+    background-color: #333;
+    color: var(--rr-text);
+    border: 1px solid #555 !important;
 }
 
-@media (max-width: 575px) {
-    .rr-genre-btn {
-        padding-top: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
-        font-size: 0.85rem;
-    }
+.rr-genre-btn:hover {
+    background-color: #333;
+    color: var(--rr-text);
 }
+
 
 /* Book detail page */
 .rr-book-header {
     background-color: #1c1c1c;
     border-bottom: 1px solid var(--rr-border);
 }
+
 .rr-detail-cover {
     width: 100%;
     max-width: 300px;
     aspect-ratio: 2 / 3;
     object-fit: cover;
 }
+
 .rr-detail-cover-placeholder {
     width: 100%;
     max-width: 300px;
@@ -268,13 +302,67 @@
     background-color: #2a2a2a;
 }
 
-/* Genre tags (small bordered labels) */
+.rr-book-description {
+    max-width: 780px;
+    line-height: 1.7;
+}
+
+/* Author button inside book detail */
+.rr-author-btn {
+    background-color: #1c1c1c;
+    transition: all 0.2s ease-in-out;
+}
+
+.rr-author-btn:hover {
+    background-color: #252525;
+    border-color: var(--rr-red) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.rr-author-btn:hover .bg-danger {
+    transform: scale(1.05);
+    background-color: var(--rr-red-dark) !important;
+}
+
+.rr-author-avatar {
+    width: 38px;
+    height: 38px;
+}
+
+.rr-author-label {
+    font-size: 0.7rem;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rr-author-name {
+    font-size: 0.95rem;
+    line-height: 1.2;
+}
+
+/* Author detail page */
+.rr-author-detail-photo {
+    width: 150px;
+    height: 150px;
+    background-color: #2a2a2a;
+    overflow: hidden;
+}
+
+/* Genre tags */
 .rr-genre-tag {
     border: 1px solid var(--rr-border);
     border-radius: 4px;
     padding: 0.2rem 0.75rem;
     font-size: 0.85rem;
     color: var(--rr-text);
+}
+
+/* Browse page filter sidebar */
+.rr-filter-box {
+    background-color: #1c1c1c;
+    border: 1px solid var(--rr-border);
 }
 
 /* Review form */
@@ -300,13 +388,11 @@
     border-color: var(--rr-red) !important;
 }
 
-/* Individual review card */
 .rr-review-item {
     background-color: #2a2a2a;
     border: 1px solid var(--rr-border);
     max-width: 900px;
 }
-
 
 /* Footer */
 .rr-footer {
@@ -321,119 +407,21 @@
     }
 }
 
-/* Force white on elements Bootstrap colours as grey in dark context */
+/* Bootstrap overrides */
+
+/* Force white on elements Bootstrap renders grey in dark context */
 .card-title,
 .fw-bold {
     color: var(--rr-text) !important;
 }
 
-/* Standardise muted text colour across all Bootstrap components */
+/* Standardise muted text colour across Bootstrap components */
 .text-secondary {
     color: var(--rr-muted) !important;
 }
-/* Reset dei conflitti */
-.rr-book-card, .rr-author-card, .rr-genre-btn {
-    transition: all 0.3s ease !important;
-}
 
-/* Animazione Card: Alzamento e Bordo Rosso */
-.rr-hover-red:hover {
-    transform: translateY(-10px) !important;
-    box-shadow: 0 0 0 2px var(--rr-red) !important;
-    border-color: var(--rr-red) !important;
-    z-index: 5;
-    position: relative;
-}
-
-/* Colore ROSSO selettivo all'hover */
-/* Colpisce il titolo del libro, il nome dell'autore e il testo del genere */
-.rr-hover-red:hover .card-title, 
-.rr-hover-red:hover .fw-bold,
-.rr-genre-btn.rr-hover-red:hover {
-    color: var(--rr-red) !important;
-}
-
-.rr-star-rating {
-    display: inline-block;
-    position: relative;
-    font-family: 'Arial', sans-serif; /* Font standard per evitare disallineamenti */
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-    line-height: 1;
-}
-
-/* Stelle vuote (Sotto) - Usiamo pseudo-elemento per il grigio */
-.rr-star-rating::before {
-    content: "★★★★★";
-    color: var(--rr-muted);
-}
-
-/* Stelle piene (Sopra) - NON mettere 'content' qui! */
-.rr-star-rating-inner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    color: var(--rr-star);
-    /* content: "★★★★★";  <-- CANCELLA O COMMENTA QUESTA RIGA */
-}
-
-/* Fix per il rosso selettivo (Titoli, Autori, Generi) */
-.rr-hover-red:hover .card-title, 
-.rr-hover-red:hover .fw-bold,
-.rr-genre-btn:hover {
-    color: var(--rr-red) !important;
-}
-
-/* Link autore nel dettaglio libro */
-.rr-author-link {
-    color: var(--rr-text) !important;
-    transition: color 0.3s ease;
-}
-
-.rr-author-link:hover {
-    color: var(--rr-red) !important;
-}
-
-/* Box autore opzionale */
-.rr-author-box {
-    background-color: #1a1a1a;
-    border: 1px solid var(--rr-border);
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.rr-author-box:hover {
-    border-color: var(--rr-red);
-    transform: translateX(5px);
-}
-
-/* Effetto Hover sul pulsante autore */
-.rr-author-btn {
-    background-color: #1c1c1c; /* Colore leggermente diverso dal fondo card */
-    transition: all 0.2s ease-in-out;
-}
-
-.rr-author-btn:hover {
-    background-color: #252525;
-    border-color: var(--rr-red) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.rr-author-btn:hover .text-white {
-    color: var(--rr-red) !important;
-}
-
-/* Animazione icona al passaggio */
-.rr-author-btn:hover .bg-danger {
-    transform: scale(1.05);
-    background-color: var(--rr-red-dark) !important;
-}
-
-.rr-author-detail-photo {
-    width: 150px;
-    height: 150px;
-    background-color: #2a2a2a;
-    overflow: hidden;
+/* Select dropdown options */
+select option {
+    background-color: var(--rr-card-bg);
+    color: var(--rr-text);
 }

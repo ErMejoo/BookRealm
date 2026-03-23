@@ -34,14 +34,13 @@
                         <a href="{% url 'BookRealm:chosen_author' book.created_by.id %}" 
                         class="btn rr-author-btn d-inline-flex align-items-center p-1 pe-3 rounded-pill border-secondary border-opacity-25">
             
-                            <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-2" 
-                                style="width: 38px; height: 38px;">
+                            <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-2 rr-author-avatar">
                                 <i class="bi bi-person-fill text-white fs-5"></i>
                             </div>
 
                             <div class="text-start">
-                                <div class="text-secondary" style="font-size: 0.7rem; line-height: 1; text-transform: uppercase; letter-spacing: 0.5px;">Author</div>
-                                <div class="text-white fw-bold" style="font-size: 0.95rem; line-height: 1.2;">{{ book.created_by.username }}</div>
+                                <div class="text-secondary rr-author-label">Author</div>
+                                <div class="text-white fw-bold rr-author-name">{{ book.created_by.username }}</div>
                             </div>
 
                             <i class="bi bi-chevron-right ms-3 text-secondary small"></i>
@@ -62,7 +61,7 @@
                         </div>
                     {% endif %}
                     <!-- Description -->
-                    <p class="text-secondary mb-4" style="max-width: 780px; line-height: 1.7;">
+                    <p class="text-secondary mb-4 rr-book-description">
                         {{ book.description }}
                     </p>
  
@@ -124,7 +123,7 @@
                         {% csrf_token %}
 
                         <p class="fw-semibold mb-2 text-white">Your Rating</p>
-                        <select name="rating" class="form-control mb-3" required>
+                        <select name="rating" class="form-select rr-search-input mb-3" required>
                             <option value="">Select rating</option>
                             <option value="1">★☆☆☆☆ (1)</option>
                             <option value="2">★★☆☆☆ (2)</option>

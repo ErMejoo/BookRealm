@@ -5,140 +5,115 @@
  
 {% block body_block %}
  
-  <!--  TITLE AND SUBTITLE  -->
-  <section class="rr-hero px-4 pt-5 pb-4">
-    <h1 class="rr-hero-title">Discover Your Next Great Read</h1>
-    <p class="text-secondary mt-3 rr-hero-sub">
-      Explore millions of books, read reviews from readers worldwide and share your own literary journey.
-    </p>
-  </section>
- 
-  <!-- TOP RATED BOOKS -->
-  <section class="px-4 mb-5">
- 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="fw-bold text-white mb-0">
-        <i class="bi bi-graph-up-arrow rr-icon-red me-2"></i>Top Rated Books
-      </h2>
-      <a href="{% url 'BookRealm:browse' %}" class="rr-view-all text-decoration-none">
-        View All <i class="bi bi-chevron-right"></i>
-      </a>
-    </div>
- 
-    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
-      {% for book in top_books %}
-        <div class="col">
-          <a href="{% url 'BookRealm:chosen_book' book.id %}" class="text-decoration-none text-white">
-            <div class="card h-100 rr-book-card border-0 rr-hover-red">
- 
-              {% if book.cover_image %}
-                <img src="{{ book.cover_image.url }}"
-                     class="card-img-top rr-book-cover"
-                     alt="{{ book.title }}">
-              {% else %}
-                <div class="rr-book-cover-placeholder d-flex align-items-center justify-content-center">
-                  <i class="bi bi-book fs-1 text-secondary"></i>
-                </div>
-              {% endif %}
- 
-              <div class="card-body p-2">
-                <p class="card-title fw-semibold mb-1 rr-truncate">{{ book.title }}</p>
-                <p class="card-text text-secondary small mb-1 rr-truncate">{{ book.author }}</p>
-                <div class="card-text small mb-1">
-                  <div class="rr-star-rating">
-                      <div class="rr-star-rating-inner" style="width: {{ book.rating_percent }}%;">★★★★★</div>
-                  </div>
-                  <span class="text-secondary ms-1">({{ book.number_reviews }})</span>
-                </div>
-              </div>
- 
+    <!--  TITLE AND SUBTITLE  -->
+    <section class="rr-hero px-4 pt-5 pb-4">
+      <h1 class="rr-hero-title">Discover Your Next Great Read</h1>
+      <p class="text-secondary mt-3 rr-hero-sub">
+        Explore millions of books, read reviews from readers worldwide and share your own literary journey.
+      </p>
+    </section>
+  
+    <!-- TOP RATED BOOKS -->
+    <section class="px-4 mb-5">
+  
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold text-white mb-0">
+          <i class="bi bi-graph-up-arrow rr-icon-red me-2"></i>Top Rated Books
+        </h2>
+        <a href="{% url 'BookRealm:browse' %}" class="rr-view-all text-decoration-none">
+          View All <i class="bi bi-chevron-right"></i>
+        </a>
+      </div>
+  
+      <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
+        {% for book in top_books %}
+            <div class="col">
+                {% include 'bookrealm/book-card.html' with book=book %}
             </div>
-          </a>
-        </div>
-      {% empty %}
-        <div class="col-12">
-          <p class="text-secondary">No books available yet.</p>
-        </div>
-      {% endfor %}
-    </div>
-
-  </section>
- 
-  <!-- TOP AUTHORS -->
-  <section class="px-4 mb-5">
- 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="fw-bold text-white mb-0">
-        <i class="bi bi-person-badge rr-icon-red me-2"></i>Top Authors
-      </h2>
-      <a href="#" class="rr-view-all text-decoration-none">
-        View All <i class="bi bi-chevron-right"></i>
-      </a>
-    </div>
- 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-      {% for author in top_authors %}
-        <div class="col">
-          <a href="{% url 'BookRealm:chosen_author' author.id %}" class="text-decoration-none text-white">
-            <div class="card rr-author-card border-0 text-center p-4 h-100 rr-hover-red">
- 
-              {% if author.photo %}
-                <img src="{{ author.photo.url }}"
-                     class="rounded-circle mx-auto mb-3 rr-author-photo"
-                     alt="{{ author.username }}">
-              {% else %}
-                <div class="rounded-circle mx-auto mb-3 rr-author-photo-placeholder d-flex align-items-center justify-content-center">
-                  <i class="bi bi-person-fill fs-2 text-secondary"></i>
-                </div>
-              {% endif %}
- 
-              <p class="fw-bold mb-2">{{ author.username }}</p>
-              <p class="text-secondary small mb-2">
-                <i class="bi bi-book-half rr-icon-red me-1"></i>
-                {{ author.total_books }} book{{ author.total_books|pluralize }}
-              </p>
-
-              <div class="d-flex flex-column align-items-center">
-                  <div class="rr-star-rating">
-                      <div class="rr-star-rating-inner" style="width: {{ author.rating_percent }}%;">
-                          ★★★★★
-                      </div>
-                  </div>
-                  <span class="text-secondary small mt-1">{{ author.average_rating|default:"0"|floatformat:1 }}</span>
-              </div>
- 
+        {% empty %}
+            <div class="col-12">
+                <p class="text-secondary">No books available yet.</p>
             </div>
-          </a>
-        </div>
-      {% empty %}
-        <div class="col-12">
-          <p class="text-secondary">No authors available yet.</p>
-        </div>
-      {% endfor %}
-    </div>
- 
-  </section>
- 
-  <section class="px-4 mb-5">
- 
-    <h2 class="fw-bold text-white mb-3">Genres Available</h2>
- 
-    <!-- GENRES -->
-    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3">
-      {% for genre in genres %}
-        <div class="col">
-          <a href="{% url 'BookRealm:browse' %}?genre={{ genre.slug }}"
-             class="btn rr-genre-btn w-100 py-3 fw-semibold rr-hover-red d-block">
-            {{ genre.name }}
-          </a>
-        </div>
-      {% empty %}
-        <div class="col-12">
-          <p class="text-secondary">No genres available yet.</p>
-        </div>
-      {% endfor %}
-    </div>
- 
-  </section>
+        {% endfor %}
+      </div>
+
+    </section>
+  
+    <!-- TOP AUTHORS -->
+    <section class="px-4 mb-5">
+  
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold text-white mb-0">
+          <i class="bi bi-person-badge rr-icon-red me-2"></i>Top Authors
+        </h2>
+        <a href="#" class="rr-view-all text-decoration-none">
+          View All <i class="bi bi-chevron-right"></i>
+        </a>
+      </div>
+  
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+        {% for author in top_authors %}
+          <div class="col">
+            <a href="{% url 'BookRealm:chosen_author' author.id %}" class="text-decoration-none text-white">
+              <div class="card rr-author-card border-0 text-center p-4 h-100 rr-hover-red">
+  
+                {% if author.photo %}
+                  <img src="{{ author.photo.url }}"
+                      class="rounded-circle mx-auto mb-3 rr-author-photo"
+                      alt="{{ author.username }}">
+                {% else %}
+                  <div class="rounded-circle mx-auto mb-3 rr-author-photo-placeholder d-flex align-items-center justify-content-center">
+                    <i class="bi bi-person-fill fs-2 text-secondary"></i>
+                  </div>
+                {% endif %}
+  
+                <p class="fw-bold mb-2">{{ author.username }}</p>
+                <p class="text-secondary small mb-2">
+                  <i class="bi bi-book-half rr-icon-red me-1"></i>
+                  {{ author.total_books }} book{{ author.total_books|pluralize }}
+                </p>
+
+                <div class="d-flex flex-column align-items-center">
+                    <div class="rr-star-rating">
+                        <div class="rr-star-rating-inner" style="width: {{ author.rating_percent }}%;">
+                            ★★★★★
+                        </div>
+                    </div>
+                    <span class="text-secondary small mt-1">{{ author.average_rating|default:"0"|floatformat:1 }}</span>
+                </div>
+  
+              </div>
+            </a>
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <p class="text-secondary">No authors available yet.</p>
+          </div>
+        {% endfor %}
+      </div>
+  
+    </section>
+  
+    <section class="px-4 mb-5">
+  
+      <h2 class="fw-bold text-white mb-3">Genres Available</h2>
+  
+      <!-- GENRES -->
+      <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3">
+        {% for genre in genres %}
+          <div class="col">
+            <a href="{% url 'BookRealm:browse' %}?genre={{ genre.id }}"
+              class="btn rr-genre-btn w-100 py-3 fw-semibold rr-hover-red d-block">
+              {{ genre.name }}
+            </a>
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <p class="text-secondary">No genres available yet.</p>
+          </div>
+        {% endfor %}
+      </div>
+  
+    </section>
  
 {% endblock %}

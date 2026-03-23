@@ -7,12 +7,12 @@
 
 {% if author %}
 
-    <!-- ========== AUTHOR HEADER ========== -->
+    <!-- Author Header-->
     <section class="rr-book-header py-5 px-4">
         <div class="container-fluid">
             <div class="row align-items-center g-4">
 
-                <!-- Author photo placeholder (circular) -->
+                <!-- Author photo placeholder -->
                 <div class="col-auto">
                     <div class="rr-author-detail-photo rounded-circle d-flex align-items-center justify-content-center">
                         <i class="bi bi-person-fill text-secondary" style="font-size: 4rem;"></i>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
 
-                    <!-- Follow / Unfollow button -->
+                    <!-- Follow/Unfollow button -->
                     {% if user.is_authenticated and user != author %}
                         {% if is_following %}
                             <a href="{% url 'BookRealm:unfollow_user' author.id %}"
@@ -65,7 +65,7 @@
         </div>
     </section>
 
-    <!-- ========== BOOKS BY AUTHOR ========== -->
+    <!-- Books by author -->
     <section class="px-4 py-5">
         <div class="container-fluid">
 
@@ -74,31 +74,7 @@
             <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
                 {% for book in books %}
                     <div class="col">
-                        <a href="{% url 'BookRealm:chosen_book' book.id %}"
-                           class="text-decoration-none text-white">
-                            <div class="card h-100 rr-book-card border-0 rr-hover-red">
-
-                                {% if book.cover_image %}
-                                    <img src="{{ book.cover_image.url }}"
-                                         class="card-img-top rr-book-cover"
-                                         alt="{{ book.title }}">
-                                {% else %}
-                                    <div class="rr-book-cover-placeholder d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-book fs-1 text-secondary"></i>
-                                    </div>
-                                {% endif %}
-
-                                <div class="card-body p-2">
-                                    <p class="fw-bold mb-1 rr-truncate">{{ book.title }}</p>
-                                    <p class="text-secondary small mb-1">{{ author.username }}</p>
-                                    <p class="small rr-stars">
-                                        ★★★★★
-                                        <span class="text-secondary">({{ book.number_reviews }})</span>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </a>
+                        {% include 'bookrealm/book-card.html' with book=book %}
                     </div>
                 {% empty %}
                     <div class="col-12">

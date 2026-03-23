@@ -1,46 +1,94 @@
 {% extends 'bookrealm/bootstrap-base.html' %}
+{% load static %}
 
-{% block title %}Browse{% endblock %}
+{% block title_block %}Browse Books{% endblock %}
 
 {% block body_block %}
-    <a href="{% url 'BookRealm:home' %}">Home</a>
-    <h1>Browse Books</h1>
-    <div>
-        <h4>Filters</h4>
-        <p>Genres</p>
-        <ul>
-            <li>Fiction</li>
-            <li>Mistery</li>
-            <li>Science Fiction</li>
-        </ul>
-    </div>
+    <div class="px-4 py-5">
 
-    <div>
-        <h2>Sort by</h2>
-        <ul>
-            <li>
-                <p>Highest Rated</p>
-            </li>
-        </ul>
-    </div>
+        <!-- Title and count -->
+        <h1 class="fw-bold text-white mb-1">Browse Books</h1>
+        <p class="text-secondary mb-4">{{ books|length }} book{{ books|length|pluralize }} found</p>
 
-    <div>
-        <ul>
-            <li>
-                <div>
-                    <p>Project Hail Mary</p>
-                    <p>Michael Chen</p>
-                    <p>5 Stars (3571 reviews)</p>
+        <div class="row g-4">
+
+            <!-- Sidebar -->
+            <div class="col-12 col-md-3">
+
+                <!-- Filters -->
+                <div class="p-4 rounded mb-3 rr-filter-box">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-white mb-0">
+                            <i class="bi bi-funnel rr-icon-red me-2"></i>Filters
+                        </h5>
+                        {% if selected_genre %}
+                            <a href="{% url 'BookRealm:browse' %}" class="text-secondary text-decoration-none small">
+                                <i class="bi bi-x"></i> Clear
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <p class="fw-semibold text-white mb-2">Genres</p>
+                    <div class="d-flex flex-column gap-2">
+                        {% for genre in genres %}
+                            <a href="{% url 'BookRealm:browse' %}?genre={{ genre.id }}{% if sort %}&sort={{ sort }}{% endif %}"
+                            class="btn text-start px-3 py-2 rr-hover-red
+                            {% if selected_genre and selected_genre.id == genre.id %}rr-btn-red{% else %}rr-genre-btn{% endif %}">
+                                {{ genre.name }}
+                            </a>
+                        {% empty %}
+                            <p class="text-secondary small">No genres available.</p>
+                        {% endfor %}
+                    </div>
                 </div>
-            </li>
-            <li>
-                <div>
-                    <p>Michael Chen</p>
-                    <p>15 Books</p>
-                    <p>Average rating: 4.8</p>
-                </div>
-            </li>
-        </ul>
-    </div>
 
+                <!-- Sort by -->
+                <div class="rr-review-form p-4 rounded">
+                    <h5 class="fw-bold text-white mb-3">Sort By</h5>
+                    <form method="GET" action="{% url 'BookRealm:browse' %}">
+                        {% if selected_genre %}
+                            <input type="hidden" name="genre" value="{{ selected_genre.id }}">
+                        {% endif %}
+                        <select name="sort"
+                                class="form-select rr-search-input"
+                                onchange="this.form.submit()">
+                            <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+                            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                        </select>
+                    </form>
+                </div>
+
+            </div>
+
+            <!--  Book grid  -->
+            <div class="col-12 col-md-9">
+
+                <!-- Active filter tag -->
+                {% if selected_genre %}
+                    <div class="mb-3">
+                        <span class="rr-genre-tag">
+                            {{ selected_genre.name }}
+                            <a href="{% url 'BookRealm:browse' %}{% if sort %}?sort={{ sort }}{% endif %}"
+                            class="ms-2 text-secondary text-decoration-none">
+                                <i class="bi bi-x"></i>
+                            </a>
+                        </span>
+                    </div>
+                {% endif %}
+
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
+                    {% for book in books %}
+                        <div class="col">
+                            {% include 'bookrealm/book-card.html' with book=book %}
+                        </div>
+                    {% empty %}
+                        <div class="col-12">
+                            <p class="text-secondary">No books found.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
