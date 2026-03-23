@@ -31,9 +31,8 @@
                     <p class="fw-semibold text-white mb-2">Genres</p>
                     <div class="d-flex flex-column gap-2">
                         {% for genre in genres %}
-                            <a href="{% url 'BookRealm:browse' %}?genre={{ genre.id }}{% if sort %}&sort={{ sort }}{% endif %}"
-                            class="btn text-start px-3 py-2 rr-hover-red
-                            {% if selected_genre and selected_genre.id == genre.id %}rr-btn-red{% else %}rr-genre-btn{% endif %}">
+                            <a href="{% url 'BookRealm:browse' %}?genre={{ genre.id }}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}"
+                            class="btn text-start px-3 py-2 rr-hover-red {% if selected_genre == genre.id|stringformat:'s' %}rr-btn-red{% else %}rr-genre-btn{% endif %}">
                                 {{ genre.name }}
                             </a>
                         {% empty %}
@@ -47,13 +46,13 @@
                     <h5 class="fw-bold text-white mb-3">Sort By</h5>
                     <form method="GET" action="{% url 'BookRealm:browse' %}">
                         {% if selected_genre %}
-                            <input type="hidden" name="genre" value="{{ selected_genre.id }}">
+                            <input type="hidden" name="genre" value="{{ selected_genre }}">
                         {% endif %}
                         <select name="sort"
                                 class="form-select rr-search-input"
                                 onchange="this.form.submit()">
-                            <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Highest Rated</option>
-                            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                            <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+                            <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest</option>
                         </select>
                     </form>
                 </div>
@@ -64,17 +63,7 @@
             <div class="col-12 col-md-9">
 
                 <!-- Active filter tag -->
-                {% if selected_genre %}
-                    <div class="mb-3">
-                        <span class="rr-genre-tag">
-                            {{ selected_genre.name }}
-                            <a href="{% url 'BookRealm:browse' %}{% if sort %}?sort={{ sort }}{% endif %}"
-                            class="ms-2 text-secondary text-decoration-none">
-                                <i class="bi bi-x"></i>
-                            </a>
-                        </span>
-                    </div>
-                {% endif %}
+                
 
                 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
                     {% for book in books %}

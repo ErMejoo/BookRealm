@@ -39,42 +39,74 @@ def home(request):
     return render(request, 'bookrealm/home.html', context_dict)
 
 def contact_us(request):
-    response = render(request, 'bookrealm/contactUs.html')
-    return response
-
-def browse(request):
-    genre_id = request.GET.get('genre', '')
-    sort = request.GET.get('sort', 'rating')
-
-    books = Book.objects.annotate(
-        average_rating=Avg('review__rating'),
-        number_reviews=Count('review')
+    books = Book.objects.all().annotate(
+        avg_rating=Avg('review__rating'),
+        num_likes=Count('wishlist_items')
     )
 
-    selected_genre = None
+    genre_id = request.GET.get('genre')
+    sort = request.GET.get('sort')
+    query = request.GET.get('q')
+
     if genre_id:
-        try:
-            selected_genre = Genre.objects.get(id=genre_id)
-            books = books.filter(genre=selected_genre)
-        except Genre.DoesNotExist:
-            pass
+        books = books.filter(genre_id=genre_id)
 
-    if sort == 'newest':
-        books = books.order_by('-created_at')
+    if query:
+        books = books.filter(title__icontains=query)
+
+    if sort == 'rating':
+        books = books.order_by('-avg_rating')
+    elif sort == 'likes':
+        books = books.order_by('-num_likes')
     else:
-        books = books.order_by('-average_rating')
-
-    for book in books:
-        book.rating_percent = (book.average_rating or 0) * 20
+        books = books.order_by('title')
 
     genres = Genre.objects.all()
 
     return render(request, 'bookrealm/browse.html', {
         'books': books,
         'genres': genres,
-        'selected_genre': selected_genre,
-        'sort': sort,
+        'selected_genre': genre_id,
+        'selected_sort': sort,
+        'query': query,
     })
+
+def browse(request):
+    books = Book.objects.all().annotate(
+        avg_rating=Avg('review__rating'),
+        num_likes=Count('wishlist_items'),
+        number_reviews=Count('review')
+    )
+
+    genre_id = request.GET.get('genre')
+    selected_sort = request.GET.get('sort')
+    query = request.GET.get('q')
+
+    if query:
+        books = books.filter(title__icontains=query)
+
+    if genre_id:
+        books = books.filter(genre_id=genre_id)
+
+    if selected_sort == 'rating':
+        books = books.order_by('-avg_rating')
+    elif selected_sort == 'likes':
+        books = books.order_by('-num_likes')
+    elif selected_sort == 'newest':
+        books = books.order_by('-created_at')
+    else:
+        books = books.order_by('title')
+
+    genres = Genre.objects.all()
+
+    return render(request, 'bookrealm/browse.html', {
+        'books': books,
+        'genres': genres,
+        'selected_genre': genre_id,
+        'selected_sort': selected_sort,
+        'query': query,
+    })
+    
 
 def chosen_author(request, user_id):
     try:

@@ -17,10 +17,16 @@
         <p class="fw-bold mb-1 rr-truncate text-white">{{ book.title }}</p>
         <p class="text-secondary small mb-1 rr-truncate">{{ book.created_by.username }}</p>
         <div class="d-flex align-items-center gap-1">
-            <div class="rr-star-rating">
-                <div class="rr-star-rating-inner" style="width: {{ book.rating_percent }}%;">★★★★★</div>
+            <div class="rr-stars text-warning">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= book.avg_rating|default:0 %}
+                        ★
+                    {% else %}
+                        ☆
+                    {% endif %}
+                {% endfor %}
             </div>
-            <span class="text-secondary small">({{ book.number_reviews|default:"0" }})</span>
+            <span class="text-secondary small">({{ book.review_set.count }})</span>
         </div>
     </div>
 
