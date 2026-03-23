@@ -39,38 +39,8 @@ def home(request):
     return render(request, 'bookrealm/home.html', context_dict)
 
 def contact_us(request):
-    books = Book.objects.all().annotate(
-        avg_rating=Avg('review__rating'),
-        num_likes=Count('wishlist_items')
-    )
-
-    genre_id = request.GET.get('genre')
-    sort = request.GET.get('sort')
-    query = request.GET.get('q')
-
-    if genre_id:
-        books = books.filter(genre_id=genre_id)
-
-    if query:
-        books = books.filter(title__icontains=query)
-
-    if sort == 'rating':
-        books = books.order_by('-avg_rating')
-    elif sort == 'likes':
-        books = books.order_by('-num_likes')
-    else:
-        books = books.order_by('title')
-
-    genres = Genre.objects.all()
-
-    return render(request, 'bookrealm/browse.html', {
-        'books': books,
-        'genres': genres,
-        'selected_genre': genre_id,
-        'selected_sort': sort,
-        'query': query,
-    })
-
+    return render(request, 'bookrealm/contactUs.html')
+    
 def browse(request):
     books = Book.objects.all().annotate(
         avg_rating=Avg('review__rating'),
@@ -249,5 +219,30 @@ def my_reviews(request):
 
 @login_required
 def publish_book(request):
-    response = render(request, 'bookrealm/publishBook.html')
-    return response
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        numPages = request.POST.get('numPages')
+        isbn = request.POST.get('isbn')
+        genre_id = request.POST.get('genre')
+
+        if title:
+            genre = Genre.objects.get(id=genre_id) if genre_id else None
+
+            Book.objects.create(
+                title=title,
+                description=description,
+                numPages=numPages,
+                isbn=isbn,
+                genre=genre,
+                created_by=request.user
+            )
+
+            messages.success(request, "Book published successfully!")
+            return redirect('BookRealm:browse')
+
+    genres = Genre.objects.all()
+
+    return render(request, 'bookrealm/publishBook.html', {
+        'genres': genres
+    })
