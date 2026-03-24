@@ -1,0 +1,24 @@
+{% extends 'bookrealm/bootstrap-base.html' %}
+{% block body_block %}
+<section class="d-flex flex-column align-items-center justify-content-center" style="min-height: 80vh;">
+    
+    <div class="rr-filter-box p-4 p-md-5 rounded-4 shadow-lg" style="width: 100%; max-width: 400px;">
+        <h3 class="text-white fw-bold mb-4 text-center">Login</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="text-white small fw-bold mb-2">Username</label>
+                <input type="text" name="username" class="form-control rr-search-input" required>
+            </div>
+            <div class="mb-4">
+                <label class="text-white small fw-bold mb-2">Password</label>
+                <input type="password" name="password" class="form-control rr-search-input" required>
+            </div>
+            <button type="submit" class="btn rr-btn-red w-100 py-2">Log In</button>
+            <p class="text-center text-secondary mt-4">
+                New here? <a href="{% url 'BookRealm:register' %}" class="rr-link-red fw-bold">Sign Up</a>
+            </p>
+        </form>
+    </div>
+</section>
+{% endblock %}

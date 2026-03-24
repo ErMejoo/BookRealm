@@ -1,60 +1,110 @@
 {% extends 'bookrealm/bootstrap-base.html' %}
 {% load static %}
-
 {% block title_block %}Publish Book{% endblock %}
-
 {% block body_block %}
-
-<section class="px-4 py-5">
-    <div class="container-fluid">
-
-        <h1 class="fw-bold text-white mb-4">Publish a Book</h1>
-
-        <div class="rr-review-form p-4 rounded">
-
-            <form method="POST">
-                {% csrf_token %}
-
-                <!-- Title -->
-                <p class="fw-semibold text-white">Book Title</p>
-                <input type="text" name="title"
-                       class="form-control rr-search-input mb-3"
-                       required>
-
-                <!-- Description -->
-                <p class="fw-semibold text-white">Description</p>
-                <textarea name="description"
-                          class="form-control rr-review-textarea mb-3"
-                          rows="4"></textarea>
-
-                <!-- Pages -->
-                <p class="fw-semibold text-white">Pages</p>
-                <input type="number" name="numPages"
-                       class="form-control rr-search-input mb-3">
-
-                <!-- ISBN -->
-                <p class="fw-semibold text-white">ISBN</p>
-                <input type="text" name="isbn"
-                       class="form-control rr-search-input mb-3">
-
-                <!-- Genre -->
-                <p class="fw-semibold text-white">Genre</p>
-                <select name="genre"
-                        class="form-select rr-search-input mb-4">
-                    {% for genre in genres %}
-                        <option value="{{ genre.id }}">{{ genre.name }}</option>
-                    {% endfor %}
-                </select>
-
-                <button type="submit" class="btn rr-btn-red px-4">
-                    Publish
-                </button>
-
-            </form>
-
+    <section class="px-4 py-5">
+        <div class="container" style="max-width: 900px;">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center">
+                <span class="rr-brand fs-1"><i class="bi bi-book-half"></i></span>
+                <span>Publish Your Book</span>
+            </h1>
+            <p class="text-secondary" style="font-size: 1.1rem;">
+                Share your literary work with millions of readers around the world.
+            </p>
         </div>
-
-    </div>
-</section>
-
+        
+        <!-- Book Details Section -->
+        <div class="rr-filter-box p-4 rounded mb-4">
+        <h2 class="text-white fw-bold mb-4">Book Details</h2>
+        <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Title -->
+        <div class="mb-4">
+            <label for="title" class="fw-semibold text-white d-block mb-2">
+                Title
+            </label>
+            <input 
+            type="text" 
+            id="title" 
+            name="title"
+            class="form-control rr-search-input"
+            placeholder="Enter book title"
+            required>
+        </div>
+        
+        <!-- Description -->
+        <div class="mb-4">
+            <label for="description" class="fw-semibold text-white d-block mb-2">
+                Description
+            </label>
+            <textarea 
+                id="description" 
+                name="description"
+                class="form-control rr-review-textarea"
+                placeholder="Write a compelling description of your book..."
+                rows="6"
+                required></textarea>
+        </div>
+        
+        <!-- Pages and ISBN in two columns -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label for="numPages" class="fw-semibold text-white d-block mb-2">
+                Pages
+                </label>
+                <input 
+                    type="number" 
+                    id="numPages" 
+                    name="numPages"
+                    class="form-control rr-search-input"
+                    placeholder="Number of pages"
+                    required
+                >
+            </div>
+        
+            <div class="col-md-6 mb-4">
+                <label for="isbn" class="fw-semibold text-white d-block mb-2">
+                    ISBN
+                </label>
+                <input 
+                    type="text" 
+                    id="isbn" 
+                    name="isbn"
+                    class="form-control rr-search-input"
+                    placeholder="978-0-00-000000-0"
+                >
+            </div>
+        </div>
+        
+        <!-- Genres -->
+        <div class="mb-4">
+            <label for="genre" class="fw-semibold text-white d-block mb-2">
+                Genre
+            </label>
+            <select 
+                id="genre"
+                name="genre"
+                class="form-select rr-search-input"
+                required>
+                <option value="">Select genre</option>
+                {% for genre in genres %}
+                    <option value="{{ genre.id }}">{{ genre.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="text-start mb-5">
+            <button type="submit" class="btn rr-btn-red px-5 py-2">
+                Publish
+            </button>
+        </div>
+        
+        </form>
+    </section>
 {% endblock %}

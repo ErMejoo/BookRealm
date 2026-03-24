@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Follow, Wishlist, Book, Genre, Review
+from .models import Follow, Wishlist, Book, Genre, Review, UserProfile
 from django.db.models import Avg, Count
 from datetime import datetime
 from django.contrib import messages
@@ -206,6 +206,58 @@ def remove_from_wishlist(request, book_id):
 def view_wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=request.user).select_related('book')
     return render(request, 'bookrealm/wishlist.html', {'wishlist_items': wishlist_items})
+
+def register(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        account_type = request.POST.get('account_type')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken.")
+            return redirect('BookRealm:register')
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        
+        is_author = True if account_type == 'author' else False
+        UserProfile.objects.create(user=user, is_author=is_author)
+
+        login(request, user)
+        return redirect('BookRealm:home')
+    
+    return render(request, 'bookrealm/register.html')
+
+def user_login(request):
+    if request.method == 'POST':
+        u = request.POST.get('username')
+        p = request.POST.get('password')
+        user = authenticate(username=u, password=p)
+        if user:
+            login(request, user)
+            return redirect('BookRealm:home')
+        else:
+            messages.error(request, "Invalid login details.")
+    return render(request, 'bookrealm/login.html')
+
+@login_required
+def user_page(request):
+    context_dict = {}
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        context_dict['profile'] = profile
+        
+        if profile.is_author:
+            my_books = Book.objects.filter(created_by=request.user).annotate(
+                avg_rating=Avg('review__rating'),
+                number_reviews=Count('review')
+            )
+            context_dict['my_books'] = my_books
+            
+    except UserProfile.DoesNotExist:
+        pass
+
+    return render(request, 'bookrealm/user-page.html', context_dict)
 
 @login_required
 def user_logout(request):

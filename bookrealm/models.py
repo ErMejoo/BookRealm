@@ -55,3 +55,13 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.username} wishlisted {self.book}"
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    bio = models.TextField(blank=True)
+    picture = models.ImageField(upload_to='profile_images', blank=True)
+    is_author = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username

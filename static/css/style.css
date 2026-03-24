@@ -48,33 +48,41 @@
     color: var(--rr-red) !important;
 }
 
-/* Search bar */
-.rr-search-form {
-    width: 100%;
-    max-width: 520px;
-}
+/* ========== SEARCH BAR - OVERRIDE TOTALE ========== */
 
-@media (max-width: 767px) {
-    .rr-search-form {
-        max-width: 100%;
-        margin: 0.75rem 0 !important;
-    }
-}
-
-.rr-search-icon,
-.rr-search-input {
+/* Colora il background dell'intero gruppo */
+.rr-search-form .input-group {
     background-color: #1e1e1e !important;
-    border-color: #3a3a3a !important;
-    color: #fff !important;
+    border-radius: 8px !important;
+    border: 1px solid #3a3a3a !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.rr-search-input::placeholder {
-    color: #888;
-}
-
-.rr-search-input:focus {
-    box-shadow: none !important;
+/* Quando l'input è a fuoco, il gruppo diventa rosso */
+.rr-search-form .input-group:focus-within {
     border-color: var(--rr-red) !important;
+    box-shadow: 0 0 0 2px rgba(232, 40, 46, 0.25) !important;
+}
+
+/* Togliamo lo sfondo e il bordo all'icona (input-group-text) */
+.rr-search-form .input-group-text.rr-search-icon {
+    background-color: transparent !important;
+    border: none !important;
+    color: var(--rr-muted) !important;
+}
+
+/* Togliamo lo sfondo e il bordo all'input form-control */
+.rr-search-form .form-control.rr-search-input {
+    background-color: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: none !important; /* Rimuove il ring di default di Bootstrap */
+}
+
+/* Sistemiamo il bottone */
+.rr-search-form .btn.rr-btn-red {
+    border: none !important;
+    border-radius: 0 8px 8px 0 !important; /* Arrotonda solo a destra */
 }
 
 /* Buttons */
@@ -186,22 +194,29 @@
     color: var(--rr-red) !important;
 }
 
+/* ========== BOOK CARDS - IMMAGINI ARROTONDATE ========== */
 
-/* Book cards */
 .rr-book-card {
     background-color: var(--rr-card-bg) !important;
-    cursor: pointer;
+    border-radius: 12px !important;
+    border: none !important;
+    /* overflow: hidden rimosso, gestiamo i bordi direttamente */
 }
 
-.rr-book-cover {
-    width: 100%;
-    aspect-ratio: 2 / 3;
-    object-fit: cover;
-}
-
+.rr-book-cover, 
 .rr-book-cover-placeholder {
     width: 100%;
     aspect-ratio: 2 / 3;
+    object-fit: cover;
+    /* Applica brutalmente il raggio di 12px SOLO agli angoli superiori */
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Assicurati che il placeholder abbia lo stesso trattamento */
+.rr-book-cover-placeholder {
     background-color: #222;
 }
 

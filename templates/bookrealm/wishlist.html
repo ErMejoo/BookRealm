@@ -6,6 +6,7 @@
 {% block body_block %}
     <section class="px-4 py-5">
         <h1 class="fw-bold text-white mb-1">My Wish List</h1>
+        <br>
         {% if wishlist_items %}
 
             <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
@@ -17,10 +18,10 @@
                             <a href="{% url 'BookRealm:chosen_book' item.book.id %}" class="text-decoration-none">
                                 {% if item.book.cover_image %}
                                     <img src="{{ item.book.cover_image.url }}"
-                                         class="card-img-top rr-book-cover"
+                                         class="card-img-top rr-book-cover rounded-top"
                                          alt="{{ item.book.title }}">
                                 {% else %}
-                                    <div class="rr-book-cover-placeholder d-flex align-items-center justify-content-center">
+                                    <div class="rr-book-cover-placeholder d-flex align-items-center justify-content-center rounded-top">
                                         <i class="bi bi-book fs-1 text-secondary"></i>
                                     </div>
                                 {% endif %}

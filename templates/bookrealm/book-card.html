@@ -1,35 +1,35 @@
 <!-- Reusable book card -->
-<div class="card h-100 rr-book-card border-0 rr-hover-red">
+<div class="card h-100 rr-book-card border-0 rr-hover-red rounded">
 
-    <a href="{% url 'BookRealm:chosen_book' book.id %}" class="text-decoration-none">
+    <a href="{% url 'BookRealm:chosen_book' book.id %}" class="text-decoration-none d-block rounded-top">
         {% if book.cover_image %}
             <img src="{{ book.cover_image.url }}"
                  class="card-img-top rr-book-cover"
                  alt="{{ book.title }}">
         {% else %}
-            <div class="rr-book-cover-placeholder d-flex align-items-center justify-content-center">
+            <div class="rr-book-cover-placeholder d-flex align-items-center justify-content-center rounded-top">
                 <i class="bi bi-book fs-1 text-secondary"></i>
             </div>
         {% endif %}
-    </a>
 
-    <div class="card-body p-2">
-        <p class="fw-bold mb-1 rr-truncate text-white">{{ book.title }}</p>
-        <p class="text-secondary small mb-1 rr-truncate">{{ book.created_by.username }}</p>
-        <div class="d-flex align-items-center gap-1">
-            <div class="rr-stars text-warning">
-                {% for i in "12345" %}
-                    {% if forloop.counter <= book.avg_rating|default:0 %}
-                        ★
-                    {% else %}
-                        ☆
-                    {% endif %}
-                {% endfor %}
+        <div class="card-body p-2">
+            <p class="fw-bold mb-1 rr-truncate text-white">{{ book.title }}</p>
+            <p class="text-secondary small mb-1 rr-truncate">{{ book.created_by.username }}</p>
+            <div class="d-flex align-items-center gap-1">
+                <div class="rr-stars text-warning">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= book.avg_rating|default:0 %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <span class="text-secondary small">
+                    {{ book.avg_rating|default:"0"|floatformat:1 }} ({{ book.number_reviews|default:"0" }})
+                </span>
             </div>
-            <span class="text-secondary small">
-                {{ book.avg_rating|default:"0"|floatformat:1 }} ({{ book.number_reviews|default:"0" }})
-            </span>
         </div>
-    </div>
+    </a>
 
 </div>
