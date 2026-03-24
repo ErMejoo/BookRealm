@@ -53,17 +53,13 @@
 
                     <!-- Follow/Unfollow button -->
                     {% if user.is_authenticated and user != author %}
-                        {% if is_following %}
-                            <a href="{% url 'BookRealm:unfollow_user' author.id %}"
-                               class="btn rr-btn-outline px-4">
+                        <button id="follow-btn" data-user-id="{{ author.id }}" class = "btn {% if is_following %}rr-btn-outline{% else %}rr-btn-red{% endif %}">
+                            {% if is_following %}
                                 <i class="bi bi-person-dash me-1"></i>Unfollow
-                            </a>
-                        {% else %}
-                            <a href="{% url 'BookRealm:follow_user' author.id %}"
-                               class="btn rr-btn-red px-4">
+                            {% else %}
                                 <i class="bi bi-person-plus me-1"></i>Follow Author
-                            </a>
-                        {% endif %}
+                            {% endif %}
+                        </button>
                     {% endif %}
 
                 </div>
@@ -98,4 +94,8 @@
     </div>
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/follow.js' %}"></script>
 {% endblock %}

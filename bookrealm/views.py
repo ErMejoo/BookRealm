@@ -167,12 +167,18 @@ def add_review(request, book_id):
 def follow_user(request, user_id):
     user_to_follow = User.objects.get(id=user_id)
     Follow.objects.get_or_create(follower=request.user, following=user_to_follow)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'status': 'followed'})
     return redirect(reverse('BookRealm:chosen_author', args=[user_id]))
 
 @login_required
 def unfollow_user(request, user_id):
     user_to_unfollow = User.objects.get(id=user_id)
     Follow.objects.filter(follower=request.user, following=user_to_unfollow).delete()
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'status': 'unfollowed'})
     return redirect(reverse('BookRealm:chosen_author', args=[user_id]))
 
 @login_required
