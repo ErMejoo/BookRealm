@@ -9,6 +9,7 @@ from .models import Follow, Wishlist, Book, Genre, Review
 from django.db.models import Avg, Count
 from datetime import datetime
 from django.contrib import messages
+from django.http import JsonResponse
 
 # Create your views here.
 def home(request):
@@ -176,25 +177,29 @@ def unfollow_user(request, user_id):
 
 @login_required
 def add_to_wishlist(request, book_id):
-    try:
-        book = Book.objects.get(id=book_id)
-        Wishlist.objects.get_or_create(user=request.user, book=book)
-        messages.success(request, "Book added to the wishlist")
-    except Book.DoesNotExist:
-        pass
+    if request.method == "POST":
+        try:
+            book = Book.objects.get(id=book_id)
+            Wishlist.objects.get_or_create(user=request.user, book=book)
+
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'added'})
+            
+        except Book.DoesNotExist:
+            return JsonResponse({'status': 'error'})
     return redirect(reverse('BookRealm:chosen_book', args=[book_id]))
 
 @login_required
 def remove_from_wishlist(request, book_id):
-    try:
-        book = Book.objects.get(id=book_id)
-        Wishlist.objects.filter(user=request.user, book=book).delete()
-        messages.success(request, "Book removed from the wishlist")
-    except Book.DoesNotExist:
-        pass
-    next_page = request.GET.get('next')
-    if next_page == "book":
-        return redirect(reverse("BookRealm:chosen_book", args=[book_id]))
+    if request.method == "POST":
+        try:
+            book = Book.objects.get(id=book_id)
+            Wishlist.objects.filter(user=request.user, book=book).delete()
+            
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'removed'})
+        except Book.DoesNotExist:
+            return JsonResponse({'status': 'error'})
     return redirect(reverse('BookRealm:view_wishlist'))
 
 @login_required

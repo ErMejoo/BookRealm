@@ -10,7 +10,7 @@
 
             <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
                 {% for item in wishlist_items %}
-                    <div class="col">
+                    <div class="col wishlist-item" id="wishlist-item-{{ item.book.id }}">
                         <div class="card h-100 rr-book-card border-0 rr-hover-red">
 
                             <!-- Cover -->
@@ -30,11 +30,11 @@
                             <div class="card-body p-2">
                                 <p class="fw-bold mb-1 rr-truncate text-white">{{ item.book.title }}</p>
                                 <p class="text-secondary small mb-2 rr-truncate">{{ item.book.created_by.username }}</p>
-                                <a href="{% url 'BookRealm:remove_from_wishlist' item.book.id %}"
-                                   class="btn rr-btn-outline w-100 py-1"
-                                   style="font-size: 0.75rem;">
+                                <button class="btn rr-btn-outline w-100 py-1 btn-remove-wishlist"
+                                        data-book-id="{{ item.book.id }}"
+                                        style="font-size: 0.75rem;">
                                     <i class="bi bi-bookmark-dash me-1"></i>Remove
-                                </a>
+                                </button>
                             </div>
 
                         </div>
@@ -50,4 +50,49 @@
             </div>
         {% endif %}
     </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function getCSRFToken() {
+    return document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken'))
+        .split('=')[1];
+}
+
+$(document).ready(function(){
+    $(".btn-remove-wishlist").click(function(){
+        let button = $(this);
+        let bookId = button.data("book-id");
+
+        $.ajax({
+            url: `/wishlist/remove/${bookId}/`,
+            type: "POST",
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            success: function(response){
+                if(response.status === "removed"){
+                    $("#wishlist-item-" + bookId).fadeOut(300, function(){ $(this).remove(); });
+
+                    if($(".wishlist-item").length === 0){
+                        $("section.px-4.py-5").html(`
+                            <div class="text-center py-5">
+                                <i class="bi bi-bookmark text-secondary" style="font-size: 3rem;"></i>
+                                <p class="text-secondary mt-3">Your reading list is empty.</p>
+                                <a href="{% url 'BookRealm:home' %}" class="btn rr-btn-red px-4 mt-2">Discover Books</a>
+                            </div>
+                        `);
+                    }
+                }
+            },
+            error: function(){
+                alert("Could not remove the book. Please try again.");
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
