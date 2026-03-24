@@ -39,7 +39,13 @@
                                 <i class="bi bi-award rr-icon-red me-1"></i>Average Rating
                             </p>
                             <p class="fw-bold mb-0">
-                                <span class="rr-stars">★★★★★</span>
+                                <span class="rr-stars">
+                                    {% if avg_rating >= 1 %}★{% else %}☆{% endif %}
+                                    {% if avg_rating >= 2 %}★{% else %}☆{% endif %}
+                                    {% if avg_rating >= 3 %}★{% else %}☆{% endif %}
+                                    {% if avg_rating >= 4 %}★{% else %}☆{% endif %}
+                                    {% if avg_rating >= 5 %}★{% else %}☆{% endif %}
+                                </span>
                                 <span class="text-white ms-1 fs-5">{{ avg_rating }}</span>
                             </p>
                         </div>

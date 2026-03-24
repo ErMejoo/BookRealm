@@ -26,7 +26,9 @@
                     {% endif %}
                 {% endfor %}
             </div>
-            <span class="text-secondary small">({{ book.review_set.count }})</span>
+            <span class="text-secondary small">
+                {{ book.avg_rating|default:"0"|floatformat:1 }} ({{ book.number_reviews|default:"0" }})
+            </span>
         </div>
     </div>
 

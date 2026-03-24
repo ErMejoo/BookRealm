@@ -66,9 +66,12 @@
         <ul class="navbar-nav ms-auto align-items-center gap-2">
            {% if user.is_authenticated %}
             <li class="nav-item">
+              <a class="btn rr-btn-outline px-3" href="{% url 'BookRealm:publish_book' %}">Publish Book</a>
+            </li>
+            <li class="nav-item">
               <span class="nav-link rr-nav-link">
                 <i class="bi bi-person-circle me-1"></i>{{ user.username }}
-            </span>
+              </span>
             </li>
             <li class="nav-item">
               <a class="btn rr-btn-red px-3" href="{% url 'BookRealm:logout' %}">Logout</a>

@@ -16,13 +16,13 @@ def home(request):
     context_dict = {}
     top_books = (
         Book.objects.annotate(
-            average_rating=Avg('review__rating'),
+            avg_rating=Avg('review__rating'),
             number_reviews=Count('review')
-        ).filter(number_reviews__gt=0).order_by('-average_rating')[:10]
+        ).filter(number_reviews__gt=0).order_by('-avg_rating')[:10]
     )
     # Book rating percentage
     for book in top_books:
-        book.rating_percent = (book.average_rating or 0) * 20
+        book.rating_percent = (book.avg_rating or 0) * 20
         
     top_authors = (
         User.objects.annotate(
