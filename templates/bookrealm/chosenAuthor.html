@@ -1,57 +1,70 @@
 {% extends 'bookrealm/bootstrap-base.html' %}
 {% load static %}
 
-{% block title_block %}{{ author.username }}{% endblock %}
+{% block title_block %}{{ author.username }} - Author Profile{% endblock %}
 
 {% block body_block %}
 
 {% if author %}
 
-    <!-- Author Header-->
-    <section class="rr-book-header py-5 px-4">
+    <section class="rr-book-header py-5 px-4" style="background-color: #121212; border-bottom: 1px solid #222;">
         <div class="container-fluid">
             <div class="row align-items-center g-4">
 
-                <!-- Author photo placeholder -->
                 <div class="col-auto">
-                    <div class="rr-author-detail-photo rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-person-fill text-secondary" style="font-size: 4rem;"></i>
+                    <div class="rr-author-detail-photo rounded-circle d-flex align-items-center justify-content-center overflow-hidden" 
+                         style="width: 150px; height: 150px; background-color: #1a1a1a; border: 3px solid #dc3545;">
+                            {% if author_profile.picture %}
+                                <img src="{{ author_profile.picture.url }}" 
+                                    alt="{{ author.username }}"
+                                    style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                <i class="bi bi-person-fill text-secondary" style="font-size: 5rem;"></i>
+                            {% endif %}
                     </div>
                 </div>
 
-                <!-- Author info -->
                 <div class="col">
-                    <h1 class="fw-bold text-white mb-1">{{ author.username }}</h1>
+                    <div class="d-flex align-items-center gap-3 mb-1">
+                        <h1 class="fw-bold text-white mb-0">{{ author.username }}</h1>
+                        {% if author_profile.is_author %}
+                            <span class="badge bg-danger">Author</span>
+                        {% endif %}
+                    </div>
+                    
                     <p class="text-secondary mb-3">
-                        Member since {{ author.date_joined|date:"Y" }}
+                        <i class="bi bi-calendar3 me-1"></i> Member since {{ author.date_joined|date:"F Y" }}
                     </p>
+                    
+                    <div class="mb-4">
+                        <p class="text-light" style="max-width: 700px; line-height: 1.6;">
+                            {{ author_profile.bio|default:"This author hasn't shared a bio yet." }}
+                        </p>
+                    </div>
 
-                    <!-- Stats -->
                     <div class="d-flex flex-wrap gap-5 mb-4">
                         <div>
-                            <p class="text-secondary small mb-1">
-                                <i class="bi bi-book-half rr-icon-red me-1"></i>Books Published
+                            <p class="text-secondary small text-uppercase fw-bold mb-1">
+                                <i class="bi bi-book-half rr-icon-red me-1"></i>Books
                             </p>
-                            <p class="fw-bold text-white mb-0 fs-5">{{ total_books }}</p>
+                            <p class="fw-bold text-white mb-0 fs-4">{{ total_books }}</p>
                         </div>
                         <div>
-                            <p class="text-secondary small mb-1">
-                                <i class="bi bi-award rr-icon-red me-1"></i>Average Rating
+                            <p class="text-secondary small text-uppercase fw-bold mb-1">
+                                <i class="bi bi-star-fill rr-icon-red me-1"></i>Avg Rating
                             </p>
                             <p class="fw-bold mb-0">
-                                <span class="rr-stars">
+                                <span class="rr-stars text-warning">
                                     {% if avg_rating >= 1 %}★{% else %}☆{% endif %}
                                     {% if avg_rating >= 2 %}★{% else %}☆{% endif %}
                                     {% if avg_rating >= 3 %}★{% else %}☆{% endif %}
                                     {% if avg_rating >= 4 %}★{% else %}☆{% endif %}
                                     {% if avg_rating >= 5 %}★{% else %}☆{% endif %}
                                 </span>
-                                <span class="text-white ms-1 fs-5">{{ avg_rating }}</span>
+                                <span class="text-white ms-2 fs-4">{{ avg_rating|floatformat:1 }}</span>
                             </p>
                         </div>
                     </div>
-
-                    <!-- Follow/Unfollow button -->
                     {% if user.is_authenticated and user != author %}
                         <button id="follow-btn" data-user-id="{{ author.id }}" class = "btn {% if is_following %}rr-btn-outline{% else %}rr-btn-red{% endif %}">
                             {% if is_following %}
@@ -67,31 +80,36 @@
         </div>
     </section>
 
-    <!-- Books by author -->
     <section class="px-4 py-5">
         <div class="container-fluid">
+            <h3 class="fw-bold text-white mb-4">
+                <i class="bi bi-collection-play me-2 text-danger"></i>Publications
+            </h3>
 
-            <h2 class="fw-bold text-white mb-4">Books by {{ author.username }}</h2>
-
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
                 {% for book in books %}
                     <div class="col">
                         {% include 'bookrealm/book-card.html' with book=book %}
                     </div>
                 {% empty %}
-                    <div class="col-12">
-                        <p class="text-secondary">No books published yet.</p>
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-book text-secondary fs-1"></i>
+                        <p class="text-secondary mt-3">This author hasn't published any books yet.</p>
                     </div>
                 {% endfor %}
             </div>
-
         </div>
     </section>
 
 {% else %}
-    <div class="px-4 py-5">
-        <p class="text-secondary">No author selected.</p>
-    </div>
+    <section class="container py-5 text-center">
+        <div class="rr-filter-box p-5 rounded-4">
+            <i class="bi bi-exclamation-triangle text-danger fs-1"></i>
+            <h2 class="text-white mt-3">Author Not Found</h2>
+            <p class="text-secondary">The user you are looking for does not exist or has been removed.</p>
+            <a href="{% url 'BookRealm:home' %}" class="btn rr-btn-red mt-3">Back to Home</a>
+        </div>
+    </section>
 {% endif %}
 
 {% endblock %}

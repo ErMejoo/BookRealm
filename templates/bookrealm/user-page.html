@@ -6,7 +6,9 @@
             <div class="rr-filter-box p-4 rounded-4">
                 <div class="mb-3">
                     {% if profile.picture %}
-                        <img src="{{ profile.picture.url }}" class="rounded-circle border border-3 border-danger" style="width: 140px; height: 140px; object-fit: cover;">
+                        <img src="{{ profile.picture.url }}" 
+                            class="rounded-circle border border-3 border-danger" 
+                            style="width: 140px; height: 140px; object-fit: cover;">
                     {% else %}
                         <i class="bi bi-person-circle text-secondary" style="font-size: 100px;"></i>
                     {% endif %}
@@ -19,8 +21,8 @@
                 
                 <div class="d-grid gap-2 mt-4">
                     <a href="{% url 'BookRealm:view_wishlist' %}" class="btn rr-btn-outline">My Wishlist</a>
-                    <button class="btn rr-btn-dark">Edit Profile</button>
-                    <button class="btn btn-sm btn-link text-danger mt-2 text-decoration-none opacity-50">Delete Account</button>
+                    <button class="btn rr-btn-dark btn rr-btn-outline">Edit Profile</button>
+                    <button class="btn btn-sm btn-link text-danger mt-2 text-decoration-none ">Delete Account</button>
                 </div>
             </div>
         </div>
@@ -31,7 +33,7 @@
                 <div class="row row-cols-1 row-cols-md-2 g-4">
                     {% for book in my_books %}
                         <div class="col">
-                            {% include 'bookrealm/components/book-card.html' with book=book %}
+                            {% include 'bookrealm/book-card.html' with book=book %}
                         </div>
                     {% empty %}
                         <p class="text-secondary">You haven't published anything yet.</p>

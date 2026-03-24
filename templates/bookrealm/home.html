@@ -50,21 +50,23 @@
           View All <i class="bi bi-chevron-right"></i>
         </a>
       </div>
-  
+
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
         {% for author in top_authors %}
           <div class="col">
             <a href="{% url 'BookRealm:chosen_author' author.id %}" class="text-decoration-none text-white">
               <div class="card rr-author-card border-0 text-center p-4 h-100 rr-hover-red">
   
-                {% if author.photo %}
-                  <img src="{{ author.photo.url }}"
+                {% if author.userprofile.picture %}
+                  <img src="{{ author.userprofile.picture.url }}"
                       class="rounded-circle mx-auto mb-3 rr-author-photo"
-                      alt="{{ author.username }}">
+                      alt="{{ author.username }}"
+                      style="width: 100px; height: 100px; object-fit: cover;">
                 {% else %}
-                  <div class="rounded-circle mx-auto mb-3 rr-author-photo-placeholder d-flex align-items-center justify-content-center">
-                    <i class="bi bi-person-fill fs-2 text-secondary"></i>
-                  </div>
+                    <div class="rounded-circle mx-auto mb-3 rr-author-photo-placeholder d-flex align-items-center justify-content-center" 
+                      style="width: 100px; height: 100px; background-color: #2a2a2a;">
+                      <i class="bi bi-person-fill fs-2 text-secondary"></i>
+                    </div>
                 {% endif %}
   
                 <p class="fw-bold mb-2">{{ author.username }}</p>

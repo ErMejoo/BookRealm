@@ -25,10 +25,11 @@ def home(request):
         book.rating_percent = (book.avg_rating or 0) * 20
         
     top_authors = (
-        User.objects.annotate(
+        User.objects.select_related('userprofile')
+        .annotate(
             average_rating=Avg('books__review__rating'),
             total_books=Count('books', distinct=True)
-            ).filter(total_books__gt=0).order_by('-average_rating')[:10]
+        ).filter(total_books__gt=0).order_by('-average_rating')[:10]
     )
     # Author rating percentage
     for author in top_authors:
@@ -41,7 +42,7 @@ def home(request):
 
 def contact_us(request):
     return render(request, 'bookrealm/contactUs.html')
-    
+
 def browse(request):
     books = Book.objects.all().annotate(
         avg_rating=Avg('review__rating'),
@@ -61,8 +62,6 @@ def browse(request):
 
     if selected_sort == 'rating':
         books = books.order_by('-avg_rating')
-    elif selected_sort == 'likes':
-        books = books.order_by('-num_likes')
     elif selected_sort == 'newest':
         books = books.order_by('-created_at')
     else:
@@ -82,12 +81,17 @@ def browse(request):
 def chosen_author(request, user_id):
     try:
         author = User.objects.get(id=user_id)
-    except User.DoesNotExist:
+        # RECUPERIAMO IL PROFILO DELL'AUTORE
+        author_profile = UserProfile.objects.get(user=author)
+    except (User.DoesNotExist, UserProfile.DoesNotExist):
         author = None
+        author_profile = None
+
     is_following = False
     books = []
     avg_rating = 0
     total_books = 0
+
     if author:
         books = Book.objects.filter(created_by=author).annotate(
             average_rating=Avg('review__rating'),
@@ -96,12 +100,15 @@ def chosen_author(request, user_id):
         total_books = books.count()
         avg = books.aggregate(avg=Avg('review__rating'))['avg']
         avg_rating = round(avg, 1) if avg else 0
+        
         if request.user.is_authenticated and request.user != author:
             is_following = Follow.objects.filter(
                 follower=request.user, following=author
             ).exists()
+
     return render(request, "bookrealm/chosenAuthor.html", {
         'author': author,
+        'author_profile': author_profile, # Passiamo il profilo con un nome chiaro
         'is_following': is_following,
         'books': books,
         'total_books': total_books,
@@ -219,19 +226,19 @@ def register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         account_type = request.POST.get('account_type')
-
+        profile_picture = request.FILES.get('picture')
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already taken.")
             return redirect('BookRealm:register')
-
         user = User.objects.create_user(username=username, email=email, password=password)
-        
         is_author = True if account_type == 'author' else False
-        UserProfile.objects.create(user=user, is_author=is_author)
-
+        UserProfile.objects.create(
+            user=user, 
+            is_author=is_author,
+            picture=profile_picture
+        )
         login(request, user)
         return redirect('BookRealm:home')
-    
     return render(request, 'bookrealm/register.html')
 
 def user_login(request):
@@ -288,24 +295,20 @@ def publish_book(request):
         numPages = request.POST.get('numPages')
         isbn = request.POST.get('isbn')
         genre_id = request.POST.get('genre')
-
+        cover = request.FILES.get('cover_image')
         if title:
             genre = Genre.objects.get(id=genre_id) if genre_id else None
-
             Book.objects.create(
                 title=title,
                 description=description,
                 numPages=numPages,
                 isbn=isbn,
                 genre=genre,
-                created_by=request.user
+                created_by=request.user,
+                cover_image=cover
             )
-
             messages.success(request, "Book published successfully!")
             return redirect('BookRealm:browse')
-
     genres = Genre.objects.all()
+    return render(request, 'bookrealm/publishBook.html', {'genres': genres})
 
-    return render(request, 'bookrealm/publishBook.html', {
-        'genres': genres
-    })
