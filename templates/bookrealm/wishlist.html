@@ -53,46 +53,4 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-function getCSRFToken() {
-    return document.cookie.split('; ')
-        .find(row => row.startsWith('csrftoken'))
-        .split('=')[1];
-}
-
-$(document).ready(function(){
-    $(".btn-remove-wishlist").click(function(){
-        let button = $(this);
-        let bookId = button.data("book-id");
-
-        $.ajax({
-            url: `/wishlist/remove/${bookId}/`,
-            type: "POST",
-            headers: {
-                "X-CSRFToken": getCSRFToken(),
-                "X-Requested-With": "XMLHttpRequest"
-            },
-            success: function(response){
-                if(response.status === "removed"){
-                    $("#wishlist-item-" + bookId).fadeOut(300, function(){ $(this).remove(); });
-
-                    if($(".wishlist-item").length === 0){
-                        $("section.px-4.py-5").html(`
-                            <div class="text-center py-5">
-                                <i class="bi bi-bookmark text-secondary" style="font-size: 3rem;"></i>
-                                <p class="text-secondary mt-3">Your reading list is empty.</p>
-                                <a href="{% url 'BookRealm:home' %}" class="btn rr-btn-red px-4 mt-2">Discover Books</a>
-                            </div>
-                        `);
-                    }
-                }
-            },
-            error: function(){
-                alert("Could not remove the book. Please try again.");
-            }
-        });
-    });
-});
-</script>
 {% endblock %}

@@ -88,14 +88,14 @@
                                     data-book-id="{{ book.id }}"
                                     class="btn {% if in_wishlist %}rr-btn-outline{% else %}rr-btn-red{% endif %} px-4">
                                 {% if in_wishlist %}
-                                    <i class="bi bi-bookmark-check me-1"></i>Remove from Reading List
+                                    <i class="bi bi-bookmark-check me-1"></i>Remove from WishList
                                 {% else %}
-                                    <i class="bi bi-bookmark-plus me-1"></i>Add to Reading List
+                                    <i class="bi bi-bookmark-plus me-1"></i>Add to WishList
                                 {% endif %}
                                 </button>
                                 <a href="{% url 'BookRealm:view_wishlist' %}"
                                    class="btn rr-btn-outline px-4">
-                                    <i class="bi bi-list-ul me-1"></i>View Reading List
+                                    <i class="bi bi-list-ul me-1"></i>View WishList
                                 </a>
                         {% endif %}
                     </div>
@@ -187,49 +187,4 @@
 {% endblock body_block %}
 
 {% block scripts %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-function getCSRFToken() {
-    return document.cookie.split('; ')
-        .find(row => row.startsWith('csrftoken'))
-        .split('=')[1];
-}
-
-$(document).ready(function(){
-    $("#wishlist-btn").click(function(){
-        let button = $(this);
-        let bookId = button.data("book-id");
-
-        let isInWishlist = button.text().includes("Remove");
-        let url = isInWishlist 
-            ? `/wishlist/remove/${bookId}/`
-            : `/wishlist/add/${bookId}/`;
-
-        $.ajax({
-            url: url,
-            type: "POST",
-            headers: {
-                "X-CSRFToken": getCSRFToken(),
-                "X-Requested-With": "XMLHttpRequest"
-            },
-            success: function(response){
-                if(response.status === "added"){
-                    button.html('<i class="bi bi-bookmark-check me-1"></i>Remove from Reading List')
-                          .removeClass("rr-btn-red")
-                          .addClass("rr-btn-outline");
-                }
-                else if(response.status === "removed"){
-                    button.html('<i class="bi bi-bookmark-plus me-1"></i>Add to Reading List')
-                          .removeClass("rr-btn-outline")
-                          .addClass("rr-btn-red");
-                }
-            },
-            error: function(){
-                alert("Something went wrong. Please try again.");
-            }
-        });
-    });
-});
-</script>
 {% endblock %}
