@@ -197,11 +197,31 @@
 }
 
 /* Book cards */
-
 .rr-book-card {
     background-color: var(--rr-card-bg) !important;
     border-radius: 12px !important;
     border: none !important;
+}
+
+.rr-book-card-compact {
+    background-color: var(--rr-card-bg);
+    border: 1px solid var(--rr-border);
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.rr-book-card-compact:hover {
+    border-color: var(--rr-red) !important;
+    transform: translateX(5px);
+}
+
+.rr-link-red {
+    color: var(--rr-red) !important;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.rr-link-red:hover {
+    color: var(--rr-red-dark) !important;
 }
 
 .rr-book-cover, 
@@ -359,6 +379,13 @@
     border-radius: 50%;
 }
 
+.rr-author-avatar-sm {
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
 .rr-author-label {
     font-size: 0.7rem;
     line-height: 1;
@@ -409,7 +436,7 @@
 /* Browse page filter sidebar */
 .rr-filter-box {
     background-color: #1c1c1c;
-    border: 1px solid var(--rr-border);
+    border: 1px solid var(--rr-border) !important;
 }
 
 /* Review form */

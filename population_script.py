@@ -33,7 +33,12 @@ def populate():
     Book.objects.all().delete()
     UserProfile.objects.all().delete()
     Genre.objects.all().delete()
-    User.objects.filter(username__in=['JK_Rowling', 'JRR_Tolkien', 'Frank_Herbert', 'Agatha_Christie', 'Orson_Scott_Card']).delete()
+    
+    # Aggiunti i lettori alla lista di eliminazione
+    User.objects.filter(username__in=[
+        'JK_Rowling', 'JRR_Tolkien', 'Frank_Herbert', 'Agatha_Christie', 'Orson_Scott_Card',
+        'BookWorm99', 'SciFiFanatic', 'MysterySolver'
+    ]).delete()
 
     authors_info = [
         {'username': 'JK_Rowling', 'first': 'Joanne', 'last': 'Rowling'},
@@ -42,8 +47,17 @@ def populate():
         {'username': 'Orson_Scott_Card', 'first': 'Orson Scott', 'last': 'Card'},
         {'username': 'Agatha_Christie', 'first': 'Agatha', 'last': 'Christie'},     
     ]
+
+    # Nuova lista per i lettori
+    readers_info = [
+        {'username': 'LeonardoPetroni', 'first': 'Leonardo', 'last': 'Petroni'},
+        {'username': 'RandomReader', 'first': 'Tizio', 'last': 'Caio'},
+        {'username': 'Reviewer', 'first': 'Misterious', 'last': 'Reader'},
+    ]
     
     users_dict = {}
+
+    # Authors
     for data in authors_info:
         user = User.objects.create_user(
             username=data['username'], 
@@ -53,11 +67,11 @@ def populate():
         )  
         profile = UserProfile.objects.create(
             user=user, 
-            is_author= True,
+            is_author=True,
             bio=f"Official profile of {data['first']} {data['last']}"
         )
         
-        # Look for a file named exactly after the username (e.g., user1.jpg)
+        # Authors' profile images
         specific_pic = None
         for ext in ['.jpg', '.jpeg', '.png']:
             potential_file = os.path.join(profile_src_dir, f"{data['username']}{ext}")
@@ -68,9 +82,25 @@ def populate():
         if specific_pic:
             with open(specific_pic, 'rb') as f:
                 profile.picture.save(f"{data['username']}.jpg", File(f), save=True)
-                print(f"Assigned image to user: {data['username']}")
+                print(f"Assigned image to author: {data['username']}")
         
         users_dict[data['username']] = user
+
+    # Readers
+    for data in readers_info:
+        user = User.objects.create_user(
+            username=data['username'], 
+            password='password123',
+            first_name=data['first'],
+            last_name=data['last']    
+        )  
+        profile = UserProfile.objects.create(
+            user=user, 
+            is_author=False,
+            bio=f"Avid reader and book enthusiast."
+        )
+        users_dict[data['username']] = user
+        print(f"Created reader: {data['username']}")
 
     # Genres and Books
     data = {
@@ -100,7 +130,7 @@ def populate():
                 numPages=b['pages'],
                 genre=genre,
                 created_by=creator,
-                description=f"An amazing {genre_name} book written by {creator.username}."
+                description=f"An amazing {genre_name} book written by {creator.get_full_name()}."
             )
 
             # Look for a file named exactly after the ISBN (e.g., 9780008386825.jpg)
@@ -121,19 +151,23 @@ def populate():
     # Reviews, Follows and Wishlist
     print("Finalizing relationships (Reviews, Follows, Wishlists)...")
     all_users = list(users_dict.values())
+    
     for book in books_list:
         for _ in range(random.randint(1, 2)):
+            # Each user can do a review
             reviewer = random.choice(all_users)
             Review.objects.create(
                 user=reviewer, book=book, 
                 rating=random.randint(4, 5),
-                comment_text=f"Impressive work by {book.created_by.username}!"
+                comment_text=f"Impressive work by {book.created_by.get_full_name()}!"
             )
 
     for u in all_users:
-        # Follow a random user
-        target = random.choice([user for user in all_users if user != u])
-        Follow.objects.get_or_create(follower=u, following=target)
+        authors_only = [user for user in all_users if user != u and user.userprofile.is_author]
+        if authors_only:
+            target = random.choice(authors_only)
+            Follow.objects.get_or_create(follower=u, following=target)
+            
         # Random wishlist item
         Wishlist.objects.get_or_create(user=u, book=random.choice(books_list))
 

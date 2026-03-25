@@ -2,50 +2,109 @@
 {% block body_block %}
 <div class="container py-5">
     <div class="row g-4">
-        <div class="col-lg-4 text-center">
-            <div class="rr-filter-box p-4 rounded-4">
-                <div class="mb-3">
+        
+        <div class="col-lg-4">
+            
+            <div class="rr-filter-box p-4 rounded-4 text-center">
+                <div class="mb-3 d-flex justify-content-center">
                     {% if profile.picture %}
-                        <img src="{{ profile.picture.url }}" 
-                            class="rounded-circle border border-3 border-danger" 
-                            style="width: 140px; height: 140px; object-fit: cover;">
+                        <img src="{{ profile.picture.url }}" class="rounded-circle border border-3 border-danger" style="width: 120px; height: 120px; object-fit: cover;">
                     {% else %}
-                        <i class="bi bi-person-circle text-secondary" style="font-size: 100px;"></i>
+                        <i class="bi bi-person-circle text-secondary" style="font-size: 80px;"></i>
                     {% endif %}
                 </div>
                 <h3 class="text-white fw-bold">{{ user.username }}</h3>
                 <span class="badge {% if profile.is_author %}bg-danger{% else %}bg-secondary{% endif %} mb-3">
                     {% if profile.is_author %}Author{% else %}Reader{% endif %}
                 </span>
-                <p class="text-secondary small px-3">{{ profile.bio|default:"No bio yet." }}</p>
+                <p class="text-secondary small px-2">{{ profile.bio|default:"No bio yet." }}</p>
                 
                 <div class="d-grid gap-2 mt-4">
-                    <a href="{% url 'BookRealm:view_wishlist' %}" class="btn rr-btn-outline">My Wishlist</a>
-                    <button class="btn rr-btn-dark btn rr-btn-outline">Edit Profile</button>
-                    <button class="btn btn-sm btn-link text-danger mt-2 text-decoration-none ">Delete Account</button>
+                    <button class="btn rr-btn-dark btn-sm rr-btn-outline">Edit Profile</button>
+                    
+                    {% if profile.is_author %}
+                        <a href="{% url 'BookRealm:view_wishlist' %}" class="btn rr-btn-outline btn-sm">My Wishlist</a>
+                    {% endif %}
                 </div>
             </div>
+
+            <div class="mt-4">
+                <h5 class="text-white fw-bold mb-3"><i class="bi bi-people me-2 text-danger"></i>Following</h5>
+                <div class="rr-filter-box p-3 rounded-4">
+                    {% for follow in followed_authors %}
+                        <a href="{% url 'BookRealm:chosen_author' follow.following.id %}" class="d-flex align-items-center mb-3 text-decoration-none group">
+                            <div class="rr-author-avatar-sm me-3">
+                                {% if follow.following.userprofile.picture %}
+                                    <img src="{{ follow.following.userprofile.picture.url }}" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+                                {% else %}
+                                    <i class="bi bi-person-circle text-secondary fs-4"></i>
+                                {% endif %}
+                            </div>
+                            <span class="text-white rr-nav-link p-0 fw-semibold">{{ follow.following.username }}</span>
+                        </a>
+                    {% empty %}
+                        <p class="text-secondary small mb-0 text-center py-2">You don't follow anyone yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
         </div>
 
         <div class="col-lg-8">
+            
             {% if profile.is_author %}
-                <h4 class="text-white fw-bold mb-4">My Publications</h4>
-                <div class="row row-cols-1 row-cols-md-2 g-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="text-white fw-bold mb-0">My Publications</h4>
+                    <a href="{% url 'BookRealm:publish_book' %}" class="btn rr-btn-red btn-sm">Publish New</a>
+                </div>
+                
+                <div class="row g-3">
                     {% for book in my_books %}
-                        <div class="col">
-                            {% include 'bookrealm/book-card.html' with book=book %}
+                        <div class="col-12">
+                            <div class="rr-book-card-compact p-2 rounded d-flex align-items-center">
+                                <img src="{{ book.cover_image.url }}" class="rounded me-3" style="width: 50px; height: 75px; object-fit: cover;">
+                                <div class="flex-grow-1">
+                                    <h6 class="text-white mb-0">{{ book.title }}</h6>
+                                    <small class="text-secondary">{{ book.number_reviews }} reviews • {{ book.avg_rating|default:0|floatformat:1 }} ★</small>
+                                </div>
+                                <a href="{% url 'BookRealm:chosen_book' book.id %}" class="btn btn-sm rr-btn-outline">View</a>
+                            </div>
                         </div>
                     {% empty %}
-                        <p class="text-secondary">You haven't published anything yet.</p>
+                        <div class="col-12 text-center py-5 rr-filter-box rounded-4">
+                            <i class="bi bi-journal-x text-secondary fs-1"></i>
+                            <p class="text-secondary mt-2">No publications yet.</p>
+                        </div>
                     {% endfor %}
                 </div>
+
             {% else %}
-                <div class="rr-filter-box p-5 rounded-4 text-center">
-                    <h4 class="text-white">Happy Reading, {{ user.username }}!</h4>
-                    <p class="text-secondary">Check your wishlist or leave reviews on your favorite books.</p>
-                    <a href="{% url 'BookRealm:browse' %}" class="btn rr-btn-red mt-3">Explore Books</a>
+                <div class="rr-filter-box p-4 rounded-4 mb-4 text-center text-md-start">
+                    <h4 class="text-white fw-bold">Welcome back, {{ user.username }}!</h4>
+                    <p class="text-secondary mb-0">Ready to discover your next favorite story?</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="rr-filter-box p-4 rounded-4 h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                            <i class="bi bi-bookmarks text-danger fs-1 mb-3"></i>
+                            <h5 class="text-white fw-bold">Wishlist</h5>
+                            <p class="text-secondary small mb-4">You have books waiting to be read.</p>
+                            <a href="{% url 'BookRealm:view_wishlist' %}" class="rr-link-red">Go to Wishlist <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="rr-filter-box p-4 rounded-4 h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                            <i class="bi bi-compass text-danger fs-1 mb-3"></i>
+                            <h5 class="text-white fw-bold">Explore</h5>
+                            <p class="text-secondary small mb-4">Browse new releases and top rated books.</p>
+                            <a href="{% url 'BookRealm:browse' %}" class="rr-link-red">Start Browsing <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
                 </div>
             {% endif %}
+
         </div>
     </div>
 </div>

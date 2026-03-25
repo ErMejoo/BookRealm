@@ -252,6 +252,9 @@ def user_page(request):
         profile = UserProfile.objects.get(user=request.user)
         context_dict['profile'] = profile
         
+        followed_authors = Follow.objects.filter(follower=request.user).select_related('following', 'following__userprofile')
+        context_dict['followed_authors'] = followed_authors
+        
         if profile.is_author:
             my_books = Book.objects.filter(created_by=request.user).annotate(
                 avg_rating=Avg('review__rating'),
@@ -268,11 +271,6 @@ def user_page(request):
 def user_logout(request):
     logout(request)
     return redirect(reverse('BookRealm:home'))
-
-@login_required
-def my_books(request):
-    response = render(request, 'bookrealm/myBooks.html')
-    return response
 
 @login_required
 def my_reviews(request):
