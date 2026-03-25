@@ -93,14 +93,22 @@ def browse(request):
 def chosen_author(request, user_id):
     try:
         author = User.objects.get(id=user_id)
-        author_profile = UserProfile.objects.get(user=author)
-    except (User.DoesNotExist, UserProfile.DoesNotExist):
+    except User.DoesNotExist:
         return render(request, "bookrealm/chosenAuthor.html", {'author': None})
-    is_following = False
+
     books = Book.objects.filter(created_by=author).annotate(
         avg_rating=Avg('review__rating'),
         number_reviews=Count('review')
     )
+    author_profile, _ = UserProfile.objects.get_or_create(
+        user=author,
+        defaults={'is_author': books.exists()},
+    )
+    if books.exists() and not author_profile.is_author:
+        author_profile.is_author = True
+        author_profile.save(update_fields=['is_author'])
+
+    is_following = False
     reviews = Review.objects.filter(book__created_by=author)
     avg_aggregate = reviews.aggregate(avg=Avg('rating'))  
     avg_rating = avg_aggregate['avg'] if avg_aggregate['avg'] is not None else 0
@@ -237,11 +245,11 @@ def register(request):
             return redirect('BookRealm:register')
         user = User.objects.create_user(username=username, email=email, password=password)
         is_author = True if account_type == 'author' else False
-        UserProfile.objects.create(
-            user=user, 
-            is_author=is_author,
-            picture=profile_picture
-        )
+        profile, _ = UserProfile.objects.get_or_create(user=user)
+        profile.is_author = is_author
+        if profile_picture:
+            profile.picture = profile_picture
+        profile.save()
         login(request, user)
         messages.success(request, f"Account created successfully. Welcome, {user.username}.")
         return redirect(next_url or 'BookRealm:home')
@@ -265,7 +273,7 @@ def user_login(request):
 def user_page(request):
     context_dict = {}
     try:
-        profile = UserProfile.objects.get(user=request.user)
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
         context_dict['profile'] = profile
         
         followed_authors = Follow.objects.filter(follower=request.user).select_related('following', 'following__userprofile')
