@@ -60,15 +60,8 @@
                 
                 <div class="row g-3">
                     {% for book in my_books %}
-                        <div class="col-12">
-                            <div class="rr-book-card-compact p-2 rounded d-flex align-items-center">
-                                <img src="{{ book.cover_image.url }}" class="rounded me-3" style="width: 50px; height: 75px; object-fit: cover;">
-                                <div class="flex-grow-1">
-                                    <h6 class="text-white mb-0">{{ book.title }}</h6>
-                                    <small class="text-secondary">{{ book.number_reviews }} reviews • {{ book.avg_rating|default:0|floatformat:1 }} ★</small>
-                                </div>
-                                <a href="{% url 'BookRealm:chosen_book' book.id %}" class="btn btn-sm rr-btn-outline">View</a>
-                            </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                            {% include "bookrealm/book-card.html" with book=book %}
                         </div>
                     {% empty %}
                         <div class="col-12 text-center py-5 rr-filter-box rounded-4">
