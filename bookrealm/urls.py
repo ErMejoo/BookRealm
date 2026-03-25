@@ -1,5 +1,8 @@
 from django.urls import path
 from bookrealm import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 app_name = 'BookRealm'
 urlpatterns = [
     path('', views.home, name='home'),
@@ -20,3 +23,5 @@ urlpatterns = [
     path('publish_book', views.publish_book, name='publish_book'),
     path('review/add/<int:book_id>/', views.add_review, name='add_review'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

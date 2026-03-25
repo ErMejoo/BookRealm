@@ -135,10 +135,9 @@ def populate():
 
             # Look for a file named exactly after the ISBN (e.g., 9780008386825.jpg)
             specific_cover = None
-            for ext in ['.jpg', '.jpeg', '.png']:
-                potential_cover = os.path.join(cover_src_dir, f"{b['isbn']}{ext}")
-                if os.path.exists(potential_cover):
-                    specific_cover = potential_cover
+            for file in os.listdir(cover_src_dir):
+                if file.startswith(b['isbn']):
+                    specific_cover = os.path.join(cover_src_dir, file)
                     break
             
             if specific_cover:
