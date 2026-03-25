@@ -38,6 +38,15 @@
     border-radius: 6px;
 }
 
+.rr-search-input::placeholder {
+    color: var(--rr-muted) !important;
+    opacity: 0.8 !important;
+}
+
+.rr-search-input::-webkit-input-placeholder { color: var(--rr-muted) !important; opacity: 0.8; }
+.rr-search-input::-moz-placeholder { color: var(--rr-muted) !important; opacity: 0.8; }
+.rr-search-input:-ms-input-placeholder { color: var(--rr-muted) !important; opacity: 0.8; }
+
 .rr-nav-link {
     color: var(--rr-text) !important;
     font-weight: 500;

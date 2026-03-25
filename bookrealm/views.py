@@ -81,40 +81,32 @@ def browse(request):
 def chosen_author(request, user_id):
     try:
         author = User.objects.get(id=user_id)
-        # RECUPERIAMO IL PROFILO DELL'AUTORE
         author_profile = UserProfile.objects.get(user=author)
     except (User.DoesNotExist, UserProfile.DoesNotExist):
-        author = None
-        author_profile = None
-
+        return render(request, "bookrealm/chosenAuthor.html", {'author': None})
     is_following = False
-    books = []
-    avg_rating = 0
-    total_books = 0
-
-    if author:
-        books = Book.objects.filter(created_by=author).annotate(
-            average_rating=Avg('review__rating'),
-            number_reviews=Count('review')
-        )
-        total_books = books.count()
-        avg = books.aggregate(avg=Avg('review__rating'))['avg']
-        avg_rating = round(avg, 1) if avg else 0
-        
-        if request.user.is_authenticated and request.user != author:
-            is_following = Follow.objects.filter(
-                follower=request.user, following=author
-            ).exists()
-
+    books = Book.objects.filter(created_by=author).annotate(
+        avg_rating=Avg('review__rating'),
+        number_reviews=Count('review')
+    )
+    reviews = Review.objects.filter(book__created_by=author)
+    avg_aggregate = reviews.aggregate(avg=Avg('rating'))  
+    avg_rating = avg_aggregate['avg'] if avg_aggregate['avg'] is not None else 0
+    total_books = books.count()
+    rating_percent = avg_rating * 20
+    if request.user.is_authenticated and request.user != author:
+        is_following = Follow.objects.filter(
+            follower=request.user, following=author
+        ).exists()
     return render(request, "bookrealm/chosenAuthor.html", {
         'author': author,
-        'author_profile': author_profile, # Passiamo il profilo con un nome chiaro
+        'author_profile': author_profile,
         'is_following': is_following,
         'books': books,
         'total_books': total_books,
         'avg_rating': avg_rating,
+        'rating_percent': rating_percent,
     })
-    
 def chosen_book(request, book_id):
     try:
         book = Book.objects.annotate(
