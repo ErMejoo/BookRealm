@@ -14,7 +14,13 @@
 
         <div class="card-body p-2">
             <p class="fw-bold mb-1 rr-truncate text-white">{{ book.title }}</p>
-            <p class="text-secondary small mb-1 rr-truncate">{{ book.created_by.username }}</p>
+            <p class="text-secondary small mb-1 rr-truncate">
+                {% if book.created_by.get_full_name %}
+                    {{ book.created_by.get_full_name }}
+                {% else %}
+                    {{ book.created_by.username }}
+                {% endif %}
+            </p>
             <div class="d-flex align-items-center gap-1">
                 <div class="rr-stars text-warning">
                     {% for i in "12345" %}

@@ -22,6 +22,11 @@ def populate():
     print(" Starting Database Population")
     # Cleaning old data
     print("Cleaning database...")
+    
+    profile_src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media/profile_images')
+    cover_src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media/covers')
+
+
     Review.objects.all().delete()
     Wishlist.objects.all().delete()
     Follow.objects.all().delete()
@@ -30,11 +35,6 @@ def populate():
     Genre.objects.all().delete()
     User.objects.filter(username__in=['JK_Rowling', 'JRR_Tolkien', 'Frank_Herbert', 'Agatha_Christie', 'Orson_Scott_Card']).delete()
 
-    all_profile_pics = get_image_paths('media/profile_images')
-    all_cover_pics = get_image_paths('media/covers')
-    profile_src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media/profile_images')
-    cover_src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media/covers')
-    
     authors_info = [
         {'username': 'JK_Rowling', 'first': 'Joanne', 'last': 'Rowling'},
         {'username': 'JRR_Tolkien', 'first': 'J.R.R.', 'last': 'Tolkien'},
@@ -65,11 +65,8 @@ def populate():
                 specific_pic = potential_file
                 break
         
-        # If specific pic not found, pick a random one from the folder
-        pic_to_use = specific_pic or (random.choice(all_profile_pics) if all_profile_pics else None)
-
-        if pic_to_use:
-            with open(pic_to_use, 'rb') as f:
+        if specific_pic:
+            with open(specific_pic, 'rb') as f:
                 profile.picture.save(f"{data['username']}.jpg", File(f), save=True)
                 print(f"Assigned image to user: {data['username']}")
         
@@ -114,11 +111,9 @@ def populate():
                     specific_cover = potential_cover
                     break
             
-            cover_to_use = specific_cover or (random.choice(all_cover_pics) if all_cover_pics else None)
-
-            if cover_to_use:
-                with open(cover_to_use, 'rb') as f:
-                    book.cover_image.save(f"cover_{b['isbn']}.jpg", File(f), save=True)
+            if specific_cover:
+                with open(specific_cover, 'rb') as f:
+                    book.cover_image.save(f"{b['isbn']}.jpg", File(f), save=True)
             
             books_list.append(book)
             print(f"Added book: {book.title}")

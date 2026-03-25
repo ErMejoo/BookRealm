@@ -7,7 +7,7 @@
  
 {% if book %}
 
-    <!--  BOOK HEADER SECTION  -->
+    <!--  Book header  -->
     <section class="rr-book-header py-5 px-4">
         <div class="container-fluid">
             <div class="row g-5">
@@ -35,12 +35,23 @@
                         class="btn rr-author-btn d-inline-flex align-items-center p-1 pe-3 rounded-pill border-secondary border-opacity-25">
             
                             <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-2 rr-author-avatar">
-                                <i class="bi bi-person-fill text-white fs-5"></i>
+                                {% if book.created_by.userprofile.picture %}
+                                    <img src="{{ book.created_by.userprofile.picture.url }}" 
+                                        alt="{{ book.created_by.username }}">
+                                {% else %}
+                                    <i class="bi bi-person-fill text-white fs-5"></i>
+                                {% endif %}
                             </div>
 
                             <div class="text-start">
                                 <div class="text-secondary rr-author-label">Author</div>
-                                <div class="text-white fw-bold rr-author-name">{{ book.created_by.username }}</div>
+                                <div class="text-white fw-bold rr-author-name">
+                                    {% if book.created_by.get_full_name %}
+                                        {{ book.created_by.get_full_name }}
+                                    {% else %}
+                                        {{ book.created_by.username }}
+                                    {% endif %}
+                                </div>
                             </div>
 
                             <i class="bi bi-chevron-right ms-3 text-secondary small"></i>
