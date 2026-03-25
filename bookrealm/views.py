@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -12,6 +13,17 @@ from django.contrib import messages
 from django.http import JsonResponse
 
 # Create your views here.
+def _get_safe_next_url(request):
+    next_url = request.POST.get('next') or request.GET.get('next')
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return next_url
+    return None
+
+
 def home(request):
     context_dict = {}
     top_books = (
@@ -213,6 +225,7 @@ def view_wishlist(request):
     return render(request, 'bookrealm/wishlist.html', {'wishlist_items': wishlist_items})
 
 def register(request):
+    next_url = _get_safe_next_url(request)
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -231,10 +244,11 @@ def register(request):
         )
         login(request, user)
         messages.success(request, f"Account created successfully. Welcome, {user.username}.")
-        return redirect('BookRealm:home')
-    return render(request, 'bookrealm/register.html')
+        return redirect(next_url or 'BookRealm:home')
+    return render(request, 'bookrealm/register.html', {'next': next_url})
 
 def user_login(request):
+    next_url = _get_safe_next_url(request)
     if request.method == 'POST':
         u = request.POST.get('username')
         p = request.POST.get('password')
@@ -242,10 +256,10 @@ def user_login(request):
         if user:
             login(request, user)
             messages.success(request, f"Welcome back, {user.username}.")
-            return redirect('BookRealm:home')
+            return redirect(next_url or 'BookRealm:home')
         else:
             messages.error(request, "Invalid login details.")
-    return render(request, 'bookrealm/login.html')
+    return render(request, 'bookrealm/login.html', {'next': next_url})
 
 @login_required
 def user_page(request):

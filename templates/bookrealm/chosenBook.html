@@ -155,7 +155,7 @@
                 </div>
             {% else %}
                 <p class="text-secondary">
-                    Please <a href="#" class="rr-link-red">log in</a> to write a review.
+                    Please <a href="{% url 'BookRealm:login' %}?next={{ request.path|urlencode }}" class="rr-link-red">log in</a> to write a review.
                 </p>
             {% endif %}
         </div>

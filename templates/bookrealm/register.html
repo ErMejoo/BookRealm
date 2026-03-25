@@ -11,6 +11,9 @@
     <div class="rr-filter-box p-4 p-md-5 rounded-4 shadow-lg" style="width: 100%; max-width: 500px;">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
             <div class="mb-3">
                 <label class="text-white small fw-bold mb-2">Username</label>
                 <input type="text" name="username" class="form-control rr-search-input" placeholder="FunnyReader123" required>
@@ -44,7 +47,7 @@
 
             <button type="submit" class="btn rr-btn-red w-100 py-2 fw-bold">Create Account</button>
             <p class="text-center text-secondary mt-4 mb-0">
-                Already have an account? <a href="{% url 'BookRealm:login' %}" class="rr-link-red fw-bold">Log in</a>
+                Already have an account? <a href="{% url 'BookRealm:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="rr-link-red fw-bold">Log in</a>
             </p>
         </form>
     </div>
