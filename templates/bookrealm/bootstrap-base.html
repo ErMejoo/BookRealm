@@ -94,6 +94,16 @@
   
     <!-- Main Content -->
     <main role="main" class="rr-main">
+
+      {% if messages %}
+        <div class="px-4 pt-3">
+          {% for message in messages %}
+            <div class="rr-flash-message {% if message.tags == 'success' %}rr-flash-success{% elif message.tags == 'error' %}rr-flash-error{% else %}rr-flash-info{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
   
       {% block body_block %}
       {% endblock %}

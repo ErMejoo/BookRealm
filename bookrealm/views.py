@@ -230,6 +230,7 @@ def register(request):
             picture=profile_picture
         )
         login(request, user)
+        messages.success(request, f"Account created successfully. Welcome, {user.username}.")
         return redirect('BookRealm:home')
     return render(request, 'bookrealm/register.html')
 
@@ -240,6 +241,7 @@ def user_login(request):
         user = authenticate(username=u, password=p)
         if user:
             login(request, user)
+            messages.success(request, f"Welcome back, {user.username}.")
             return redirect('BookRealm:home')
         else:
             messages.error(request, "Invalid login details.")
@@ -270,6 +272,7 @@ def user_page(request):
 @login_required
 def user_logout(request):
     logout(request)
+    messages.success(request, "You have been logged out.")
     return redirect(reverse('BookRealm:home'))
 
 @login_required

@@ -468,6 +468,30 @@
     max-width: 900px;
 }
 
+.rr-flash-message {
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+}
+
+.rr-flash-success {
+    background-color: rgba(54, 179, 126, 0.12);
+    border: 1px solid rgba(54, 179, 126, 0.35);
+    color: #93e1bc;
+}
+
+.rr-flash-error {
+    background-color: rgba(232, 40, 46, 0.12);
+    border: 1px solid rgba(232, 40, 46, 0.35);
+    color: #ffb7b9;
+}
+
+.rr-flash-info {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--rr-text);
+}
+
 /* Footer */
 .rr-footer {
     border-top: 1px solid var(--rr-border);
