@@ -92,3 +92,66 @@ class RatingLogicTest(TestCase):
         avg = sum(r.rating for r in reviews) / reviews.count()
 
         self.assertEqual(avg, 3)
+
+class EdgeCaseTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(username='testuser')
+        self.book = Book.objects.create(
+            isbn='9999999999999',
+            title='Empty Book',
+            description='No reviews yet',
+            numPages=100,
+            created_by=self.user
+        )
+
+    def test_no_reviews_avg(self):
+        reviews = Review.objects.filter(book=self.book)
+        if reviews.count() == 0:
+            avg = 0
+        else:
+            avg = sum(r.rating for r in reviews) / reviews.count()
+
+        self.assertEqual(avg, 0)
+
+class PermissionTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.book = Book.objects.create(
+            isbn='8888888888888',
+            title='Secure Book',
+            description='Test',
+            numPages=100,
+            created_by=self.user
+        )
+
+    def test_add_review_without_login(self):
+        response = self.client.post(
+            reverse('BookRealm:add_review', args=[self.book.id]),
+            {'rating': 5, 'comment_text': 'Test'}
+        )
+
+        self.assertNotEqual(response.status_code, 200)  
+
+class WishlistTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.book = Book.objects.create(
+            isbn='7777777777777',
+            title='Wishlist Book',
+            description='Test',
+            numPages=100,
+            created_by=self.user
+        )
+
+    def test_add_to_wishlist(self):
+        self.client.login(username='testuser', password='12345')
+
+        response = self.client.get(
+            reverse('BookRealm:add_to_wishlist', args=[self.book.id])
+        )
+
+        self.assertEqual(response.status_code, 302)
+
