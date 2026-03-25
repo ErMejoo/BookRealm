@@ -26,15 +26,21 @@ def populate():
     profile_src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media/profile_images')
     cover_src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media/covers')
 
+    non_super_users = User.objects.filter(is_superuser=False)
 
-    Review.objects.all().delete()
-    Wishlist.objects.all().delete()
-    Follow.objects.all().delete()
-    Book.objects.all().delete()
-    UserProfile.objects.all().delete()
+    # Delete all objects related to non-superusers
+    Review.objects.filter(user__in=non_super_users).delete()
+    Wishlist.objects.filter(user__in=non_super_users).delete()
+    Follow.objects.filter(follower__in=non_super_users).delete()
+    Book.objects.filter(created_by__in=non_super_users).delete()
+    UserProfile.objects.filter(user__in=non_super_users).delete()
+    non_super_users.delete()
+
+    # Clear all genres
     Genre.objects.all().delete()
+
     
-    # Aggiunti i lettori alla lista di eliminazione
+    # Added readers to the deletion list
     User.objects.filter(username__in=[
         'JK_Rowling', 'JRR_Tolkien', 'Frank_Herbert', 'Agatha_Christie', 'Orson_Scott_Card',
         'BookWorm99', 'SciFiFanatic', 'MysterySolver'
@@ -48,7 +54,7 @@ def populate():
         {'username': 'Agatha_Christie', 'first': 'Agatha', 'last': 'Christie'},     
     ]
 
-    # Nuova lista per i lettori
+    # New List of the readers
     readers_info = [
         {'username': 'LeonardoPetroni', 'first': 'Leonardo', 'last': 'Petroni'},
         {'username': 'RandomReader', 'first': 'Tizio', 'last': 'Caio'},
