@@ -1,7 +1,6 @@
 import os
 import random
 import django
-from django.core.files import File
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'book_realm_project.settings')
 django.setup()
@@ -51,7 +50,9 @@ def populate():
         {'username': 'JRR_Tolkien', 'first': 'J.R.R.', 'last': 'Tolkien'},
         {'username': 'Frank_Herbert', 'first': 'Frank', 'last': 'Herbert'},
         {'username': 'Orson_Scott_Card', 'first': 'Orson Scott', 'last': 'Card'},
-        {'username': 'Agatha_Christie', 'first': 'Agatha', 'last': 'Christie'},     
+        {'username': 'Agatha_Christie', 'first': 'Agatha', 'last': 'Christie'},
+        {'username': 'LuXun', 'first': 'Xun', 'last': 'Lu'},    
+        {'username': 'QiongYao', 'first': 'Yao', 'last': 'Qiong'},
     ]
 
     # New List of the readers
@@ -86,9 +87,9 @@ def populate():
                 break
         
         if specific_pic:
-            with open(specific_pic, 'rb') as f:
-                profile.picture.save(f"{data['username']}.jpg", File(f), save=True)
-                print(f"Assigned image to author: {data['username']}")
+            profile.picture.name = f"profile_images/{os.path.basename(specific_pic)}"
+            profile.save()
+            print(f"Assigned image to author: {data['username']}")
         
         users_dict[data['username']] = user
 
@@ -122,6 +123,12 @@ def populate():
         'Mystery': [
             {'title': 'Murder on the Orient Express', 'isbn': '9780008386824', 'pages': 289, 'author': 'Agatha_Christie'},
             {'title': 'Death on the Nile', 'isbn': '9780008386825', 'pages': 336, 'author': 'Agatha_Christie'},
+        ],
+        'Literature': [
+            {'title': 'The True Story of Ah Q', 'isbn': '9783333333333', 'pages': 120, 'author': 'LuXun'},
+        ],
+        'Romance': [
+            {'title': 'My Fair Princess', 'isbn': '9784444444444', 'pages': 300, 'author': 'QiongYao'},
         ]
     }
 
@@ -139,16 +146,11 @@ def populate():
                 description=f"An amazing {genre_name} book written by {creator.get_full_name()}."
             )
 
-            # Look for a file named exactly after the ISBN (e.g., 9780008386825.jpg)
-            specific_cover = None
-            for file in os.listdir(cover_src_dir):
-                if file.startswith(b['isbn']):
-                    specific_cover = os.path.join(cover_src_dir, file)
-                    break
-            
-            if specific_cover:
-                with open(specific_cover, 'rb') as f:
-                    book.cover_image.save(f"{b['isbn']}.jpg", File(f), save=True)
+            specific_cover = os.path.join(cover_src_dir, f"{b['isbn']}.jpg")
+
+            if os.path.exists(specific_cover):
+                book.cover_image.name = f"covers/{b['isbn']}.jpg"
+                book.save()
             
             books_list.append(book)
             print(f"Added book: {book.title}")
