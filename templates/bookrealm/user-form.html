@@ -1,0 +1,63 @@
+{% if user_form.errors or profile_form.errors %}
+    <div class="alert alert-danger pb-0">
+        <ul class="small">
+            {% for field in user_form %}{% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}
+            {% for field in profile_form %}{% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<div class="mb-3">
+    <label class="text-white small fw-bold mb-2">Username</label>
+    {% if mode == 'register' %}
+        <input type="text" name="username" class="form-control rr-search-input" 
+            value="{{ user_form.instance.username }}" required
+            placeholder="FunnyReader123">
+    {% else %}
+        <input type="text" name="username" class="form-control rr-search-input" 
+            value="{{ user_form.instance.username }}" required>
+    {% endif %}
+</div>
+
+<div class="mb-3">
+    <label class="text-white small fw-bold mb-2">Email</label>
+    <input type="email" name="email" class="form-control rr-search-input" 
+           value="{{ user_form.instance.email|default:'' }}" required>
+</div>
+
+<div class="mb-3">
+    <label class="text-white small fw-bold mb-2">Bio</label>
+    <textarea name="bio" class="form-control rr-review-textarea" rows="3">{{ profile_form.instance.bio|default:'' }}</textarea>
+</div>
+
+<div class="mb-3">
+    <label class="text-white small fw-bold mb-2">Profile Picture</label>
+    {% if mode == 'edit' and profile.picture %}
+    <div class="mb-2">
+        <img src="{{ profile.picture.url }}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+        <p class="text-secondary small mt-2">Current picture</p>
+    </div>
+    {% endif %}
+    <input type="file" name="picture" class="form-control rr-search-input" accept="image/*">
+</div>
+
+<div class="mb-3">
+    <label class="text-white small fw-bold mb-2">Password</label>
+    <input type="password" name="password" class="form-control rr-search-input" 
+           placeholder="{% if mode == 'edit' %}Lascia vuoto per non cambiare{% else %}********{% endif %}" 
+           {% if mode == 'register' %}required{% endif %}>
+</div>
+
+<div class="mb-4">
+    <label class="text-white small fw-bold mb-2 d-block">Account Type</label>
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="radio" name="is_author" id="reader" value="False" 
+               {% if not profile_form.instance.is_author %}checked{% endif %}>
+        <label class="form-check-label text-white" for="reader">Reader - I want to discover books</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="is_author" id="author" value="True" 
+               {% if profile_form.instance.is_author %}checked{% endif %}>
+        <label class="form-check-label text-white" for="author">Author - I want to publish books</label>
+    </div>
+</div>

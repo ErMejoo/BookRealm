@@ -57,7 +57,6 @@ def populate():
 
     # New List of the readers
     readers_info = [
-        {'username': 'LeonardoPetroni', 'first': 'Leonardo', 'last': 'Petroni'},
         {'username': 'RandomReader', 'first': 'Tizio', 'last': 'Caio'},
         {'username': 'Reviewer', 'first': 'Misterious', 'last': 'Reader'},
     ]
@@ -69,6 +68,7 @@ def populate():
         user = User.objects.create_user(
             username=data['username'], 
             password='password123',
+            email=f"{data['username']}@gmail.com",
             first_name=data['first'],
             last_name=data['last']    
         )  
@@ -85,7 +85,7 @@ def populate():
             if os.path.exists(potential_file):
                 specific_pic = potential_file
                 break
-        
+
         if specific_pic:
             profile.picture.name = f"profile_images/{os.path.basename(specific_pic)}"
             profile.save()
@@ -98,6 +98,7 @@ def populate():
         user = User.objects.create_user(
             username=data['username'], 
             password='password123',
+            email=f"{data['username']}@gmail.com",
             first_name=data['first'],
             last_name=data['last']    
         )  

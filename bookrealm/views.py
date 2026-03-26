@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Follow, Wishlist, Book, Genre, Review, UserProfile
@@ -11,9 +11,10 @@ from django.db.models import Avg, Count
 from datetime import datetime
 from django.contrib import messages
 from django.http import JsonResponse
+from .forms import UserForm, UserProfileForm
 
 # Create your views here.
-def _get_safe_next_url(request):
+def get_safe_next_url(request):
     next_url = request.POST.get('next') or request.GET.get('next')
     if next_url and url_has_allowed_host_and_scheme(
         next_url,
@@ -22,7 +23,6 @@ def _get_safe_next_url(request):
     ):
         return next_url
     return None
-
 
 def home(request):
     context_dict = {}
@@ -127,6 +127,7 @@ def chosen_author(request, user_id):
         'avg_rating': avg_rating,
         'rating_percent': rating_percent,
     })
+
 def chosen_book(request, book_id):
     try:
         book = Book.objects.annotate(
@@ -233,30 +234,51 @@ def view_wishlist(request):
     return render(request, 'bookrealm/wishlist.html', {'wishlist_items': wishlist_items})
 
 def register(request):
-    next_url = _get_safe_next_url(request)
+    context_dict = {}
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        account_type = request.POST.get('account_type')
-        profile_picture = request.FILES.get('picture')
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already taken.")
-            return redirect('BookRealm:register')
-        user = User.objects.create_user(username=username, email=email, password=password)
-        is_author = True if account_type == 'author' else False
-        profile, _ = UserProfile.objects.get_or_create(user=user)
-        profile.is_author = is_author
-        if profile_picture:
-            profile.picture = profile_picture
-        profile.save()
-        login(request, user)
-        messages.success(request, f"Account created successfully. Welcome, {user.username}.")
-        return redirect(next_url or 'BookRealm:home')
-    return render(request, 'bookrealm/register.html', {'next': next_url})
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST, files=request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            login(request, user)
+            messages.success(request, f"Welcome {user.username}!")
+            return redirect('BookRealm:home')
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+    context_dict['user_form'] = user_form
+    context_dict['profile_form'] = profile_form
+    context_dict['mode'] = 'register'
+    return render(request, 'bookrealm/register.html', context_dict)
+
+@login_required
+def edit_profile(request):
+    context_dict = {}
+    profile, _ = UserProfile.objects.get_or_create(user=request.user) 
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST, instance=request.user)
+        profile_form = UserProfileForm(data=request.POST, files=request.FILES, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save() 
+            profile_form.save()
+            if user_form.cleaned_data.get('password'):
+                update_session_auth_hash(request, user)       
+            messages.success(request, 'Profilo aggiornato con successo!')
+            return redirect('BookRealm:user_page')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=profile)
+    context_dict['user_form'] = user_form
+    context_dict['profile_form'] = profile_form
+    context_dict['profile'] = profile
+    context_dict['mode'] = 'edit'
+    return render(request, 'bookrealm/edit-profile.html', context_dict)
 
 def user_login(request):
-    next_url = _get_safe_next_url(request)
+    next_url = get_safe_next_url(request)
     if request.method == 'POST':
         u = request.POST.get('username')
         p = request.POST.get('password')

@@ -1,0 +1,22 @@
+{% extends 'bookrealm/bootstrap-base.html' %}
+{% load static %}
+{% block body_block %}
+<section class="d-flex flex-column align-items-center justify-content-center py-5" style="min-height: 90vh;">
+    <div class="text-center mb-4">
+        <h2 class="text-white fw-bold mt-3">Edit Profile</h2>
+        <p class="text-secondary">Update your information</p>
+    </div>
+    <div class="rr-filter-box p-4 p-md-5 rounded-4 shadow-lg" style="width: 100%; max-width: 500px;">
+        <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+        
+            {% include "bookrealm/user-form.html" %}
+            
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn rr-btn-red py-2 fw-bold">Save Changes</button>
+                <a href="{% url 'BookRealm:user_page' %}" class="btn rr-btn-outline py-2 fw-bold">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

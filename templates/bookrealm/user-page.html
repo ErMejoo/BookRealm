@@ -20,7 +20,7 @@
                 <p class="text-secondary small px-2">{{ profile.bio|default:"No bio yet." }}</p>
                 
                 <div class="d-grid gap-2 mt-4">
-                    <button class="btn rr-btn-dark btn-sm rr-btn-outline">Edit Profile</button>
+                    <a href="{% url 'BookRealm:edit_profile' %}" class="btn rr-btn-dark btn-sm rr-btn-outline">Edit Profile</a>
                     
                     {% if profile.is_author %}
                         <a href="{% url 'BookRealm:view_wishlist' %}" class="btn rr-btn-outline btn-sm">My Wishlist</a>

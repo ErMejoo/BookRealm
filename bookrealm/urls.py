@@ -22,6 +22,7 @@ urlpatterns = [
     path('my_review', views.my_reviews, name='my_review'),
     path('publish_book', views.publish_book, name='publish_book'),
     path('review/add/<int:book_id>/', views.add_review, name='add_review'),
+    path('edit_profile/', views.edit_profile, name='edit_profile'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
