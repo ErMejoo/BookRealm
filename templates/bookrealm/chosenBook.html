@@ -1,199 +1,199 @@
 {% extends 'bookrealm/bootstrap-base.html' %}
 {% load static %}
  
-{% block title_block %}{{ book.title }}{% endblock %}
+{% block title_block %}
+    {{ book.title }}
+{% endblock %}
  
 {% block body_block %}
- 
-{% if book %}
-
-    <!--  Book header  -->
-    <section class="rr-book-header py-5 px-4">
-        <div class="container-fluid">
-            <div class="row g-5">
- 
-                <!-- Book image -->
-                <div class="col-12 col-md-3">
-                    {% if book.cover_image %}
-                        <img src="{{ book.cover_image.url }}"
-                             alt="{{ book.title }}"
-                             class="rr-detail-cover rounded">
-                    {% else %}
-                        <div class="rr-detail-cover-placeholder rounded d-flex align-items-center justify-content-center">
-                            <i class="bi bi-book fs-1 text-secondary"></i>
-                        </div>
-                    {% endif %}
-                </div>
- 
-                <!-- Book details -->
-                <div class="col-12 col-md-9">
- 
-                    <!-- Title and author -->
-                    <h1 class="fw-bold mb-1 text-white">{{ book.title }}</h1>
-                    <div class="mb-4">
-                        <a href="{% url 'BookRealm:chosen_author' book.created_by.id %}" 
-                        class="btn rr-author-btn d-inline-flex align-items-center p-1 pe-3 rounded-pill border-secondary border-opacity-25">
-            
-                            <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-2 rr-author-avatar">
-                                {% if book.created_by.userprofile.picture %}
-                                    <img src="{{ book.created_by.userprofile.picture.url }}" 
-                                        alt="{{ book.created_by.username }}">
-                                {% else %}
-                                    <i class="bi bi-person-fill text-white fs-5"></i>
-                                {% endif %}
+    {% if book %}
+        <!--  Book header  -->
+        <section class="rr-book-header py-5 px-4">
+            <div class="container-fluid">
+                <div class="row g-5">
+    
+                    <!-- Book image -->
+                    <div class="col-12 col-md-3">
+                        {% if book.cover_image %}
+                            <img src="{{ book.cover_image.url }}"
+                                alt="{{ book.title }}"
+                                class="rr-detail-cover rounded">
+                        {% else %}
+                            <div class="rr-detail-cover-placeholder rounded d-flex align-items-center justify-content-center">
+                                <i class="bi bi-book fs-1 text-secondary"></i>
                             </div>
-
-                            <div class="text-start">
-                                <div class="text-secondary rr-author-label">Author</div>
-                                <div class="text-white fw-bold rr-author-name">
-                                    {% if book.created_by.get_full_name %}
-                                        {{ book.created_by.get_full_name }}
-                                    {% else %}
-                                        {{ book.created_by.username }}
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <i class="bi bi-chevron-right ms-3 text-secondary small"></i>
-                        </a>
-                    </div>
- 
-                    <!-- Rating -->
-                    <div class="d-flex align-items-center gap-3 mb-4">
-                        <div class="rr-star-rating fs-4">
-                            <div class="rr-star-rating-inner" style="width: {{ book.rating_percent }}%;">★★★★★</div>
-                        </div>
-                        <span class="text-secondary">({{ book.review_count }} reviews)</span>
-                    </div>
-
-                    {% if book.genre %}
-                        <div class="mb-4">
-                            <span class="rr-genre-tag">{{ book.genre.name }}</span>
-                        </div>
-                    {% endif %}
-                    <!-- Description -->
-                    <p class="text-secondary mb-4 rr-book-description">
-                        {{ book.description }}
-                    </p>
- 
-                    <!-- pages, ISBN -->
-                    <div class="d-flex flex-wrap gap-5 mb-4">
-                        <div>
-                            <p class="text-secondary small mb-1">
-                                <i class="bi bi-file-text me-1"></i>Pages
-                            </p>
-                            <p class="fw-bold mb-0 text-white">{{ book.numPages }}</p>
-                        </div>
-                        <div>
-                            <p class="text-secondary small mb-1">
-                                <i class="fw-bold mb-0 text-white"></i>ISBN
-                            </p>
-                            <p class="fw-bold mb-0">{{ book.isbn }}</p>
-                        </div>
-                    </div>
- 
-                    <!-- Action buttons -->
-                    <div class="d-flex flex-wrap gap-3">
-                        {% if user.is_authenticated %}
-                            <button id="wishlist-btn"
-                                    data-book-id="{{ book.id }}"
-                                    class="btn {% if in_wishlist %}rr-btn-outline{% else %}rr-btn-red{% endif %} px-4">
-                                {% if in_wishlist %}
-                                    <i class="bi bi-bookmark-check me-1"></i>Remove from WishList
-                                {% else %}
-                                    <i class="bi bi-bookmark-plus me-1"></i>Add to WishList
-                                {% endif %}
-                                </button>
-                                <a href="{% url 'BookRealm:view_wishlist' %}"
-                                   class="btn rr-btn-outline px-4">
-                                    <i class="bi bi-list-ul me-1"></i>View WishList
-                                </a>
                         {% endif %}
                     </div>
+    
+                    <!-- Book details -->
+                    <div class="col-12 col-md-9">
+    
+                        <!-- Title and author -->
+                        <h1 class="fw-bold mb-1 text-white">{{ book.title }}</h1>
+                        <div class="mb-4">
+                            <a href="{% url 'BookRealm:chosen_author' book.created_by.id %}" 
+                            class="btn rr-author-btn d-inline-flex align-items-center p-1 pe-3 rounded-pill border-secondary border-opacity-25">
+                
+                                <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-2 rr-author-avatar">
+                                    {% if book.created_by.userprofile.picture %}
+                                        <img src="{{ book.created_by.userprofile.picture.url }}" 
+                                            alt="{{ book.created_by.username }}">
+                                    {% else %}
+                                        <i class="bi bi-person-fill text-white fs-5"></i>
+                                    {% endif %}
+                                </div>
 
+                                <div class="text-start">
+                                    <div class="text-secondary rr-author-label">Author</div>
+                                    <div class="text-white fw-bold rr-author-name">
+                                        {% if book.created_by.get_full_name %}
+                                            {{ book.created_by.get_full_name }}
+                                        {% else %}
+                                            {{ book.created_by.username }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <i class="bi bi-chevron-right ms-3 text-secondary small"></i>
+                            </a>
+                        </div>
+    
+                        <!-- Rating -->
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div class="rr-star-rating fs-4">
+                                <div class="rr-star-rating-inner" style="width: {{ book.rating_percent }}%;">★★★★★</div>
+                            </div>
+                            <span class="text-secondary">({{ book.review_count }} reviews)</span>
+                        </div>
+
+                        {% if book.genre %}
+                            <div class="mb-4">
+                                <span class="rr-genre-tag">{{ book.genre.name }}</span>
+                            </div>
+                        {% endif %}
+                        <!-- Description -->
+                        <p class="text-secondary mb-4 rr-book-description">
+                            {{ book.description }}
+                        </p>
+    
+                        <!-- pages, ISBN -->
+                        <div class="d-flex flex-wrap gap-5 mb-4">
+                            <div>
+                                <p class="text-secondary small mb-1">
+                                    <i class="bi bi-file-text me-1"></i>Pages
+                                </p>
+                                <p class="fw-bold mb-0 text-white">{{ book.numPages }}</p>
+                            </div>
+                            <div>
+                                <p class="text-secondary small mb-1">
+                                    <i class="fw-bold mb-0 text-white"></i>ISBN
+                                </p>
+                                <p class="fw-bold mb-0">{{ book.isbn }}</p>
+                            </div>
+                        </div>
+    
+                        <!-- Action buttons -->
+                        <div class="d-flex flex-wrap gap-3">
+                            {% if user.is_authenticated %}
+                                <button id="wishlist-btn"
+                                        data-book-id="{{ book.id }}"
+                                        class="btn {% if in_wishlist %}rr-btn-outline{% else %}rr-btn-red{% endif %} px-4">
+                                    {% if in_wishlist %}
+                                        <i class="bi bi-bookmark-check me-1"></i>Remove from WishList
+                                    {% else %}
+                                        <i class="bi bi-bookmark-plus me-1"></i>Add to WishList
+                                    {% endif %}
+                                    </button>
+                                    <a href="{% url 'BookRealm:view_wishlist' %}"
+                                    class="btn rr-btn-outline px-4">
+                                        <i class="bi bi-list-ul me-1"></i>View WishList
+                                    </a>
+                            {% endif %}
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
- 
-    <!--  Write a review -->
-    <section class="px-4 py-5">
-        <div class="container-fluid">
- 
-            {% if user_review %}
-                <h2 class="fw-bold mb-4 text-white">Change your Review</h2>
-            {% else %}
-                <h2 class="fw-bold mb-4 text-white">Write a Review</h2>
-            {% endif %}
-            {% if user.is_authenticated %}
-                <div class="rr-review-form p-4 rounded">
+        </section>
     
-                    <form method="POST" action="{% url 'BookRealm:add_review' book.id %}">
-                        {% csrf_token %}
+        <!--  Write a review -->
+        <section class="px-4 py-5">
+            <div class="container-fluid">
+    
+                {% if user_review %}
+                    <h2 class="fw-bold mb-4 text-white">Change your Review</h2>
+                {% else %}
+                    <h2 class="fw-bold mb-4 text-white">Write a Review</h2>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <div class="rr-review-form p-4 rounded">
+        
+                        <form method="POST" action="{% url 'BookRealm:add_review' book.id %}">
+                            {% csrf_token %}
 
-                        <p class="fw-semibold mb-2 text-white">Your Rating</p>
-                        <select name="rating" class="form-select rr-search-input mb-3" required>
-                            <option value="">Select rating</option>
-                            <option value="1" {% if user_review and user_review.rating == 1 %}selected{% endif %}>★☆☆☆☆ (1)</option>
-                            <option value="2" {% if user_review and user_review.rating == 2 %}selected{% endif %}>★★☆☆☆ (2)</option>
-                            <option value="3" {% if user_review and user_review.rating == 3 %}selected{% endif %}>★★★☆☆ (3)</option>
-                            <option value="4" {% if user_review and user_review.rating == 4 %}selected{% endif %}>★★★★☆ (4)</option>
-                            <option value="5" {% if user_review and user_review.rating == 5 %}selected{% endif %}>★★★★★ (5)</option>
-                        </select>
-                        
-                        <p class="fw-semibold mb-2 text-white">Your Review</p>
-                        <textarea name="comment_text"
-                                  class="form-control rr-review-textarea mb-3"
-                                  rows="4"
-                                  placeholder="Share your thoughts about this book..."
-                                  required>{% if user_review %}{{ user_review.comment_text }}{% endif %}</textarea>
-                        
-                        <button type="submit" class="btn rr-btn-red px-4">
-                            {% if user_review %}Update Review{% else %}Publish Review{% endif %}
-                        </button>
-                    </form>
-                </div>
-            {% else %}
-                <p class="text-secondary">
-                    Please <a href="{% url 'BookRealm:login' %}?next={{ request.path|urlencode }}" class="rr-link-red">log in</a> to write a review.
-                </p>
-            {% endif %}
-        </div>
-    </section>
-    <!-- Rewies Section -->
-    {% if reviews %}
-    <section class="px-4 pb-5">
-        <div class="container-fluid">
-
-            <h2 class="fw-bold mb-4 text-white">Reviews</h2>
-
-            {% for review in reviews %}
-                <div class="rr-review-item p-4 rounded mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-semibold text-white">
-                            <i class="bi bi-person-circle me-1 text-secondary"></i>
-                            {{ review.user.username }}
-                        </span>
-                        <span class="text-secondary small">{{ review.created_at|date:"d M Y" }}</span>
+                            <p class="fw-semibold mb-2 text-white">Your Rating</p>
+                            <select name="rating" class="form-select rr-search-input mb-3" required>
+                                <option value="">Select rating</option>
+                                <option value="1" {% if user_review and user_review.rating == 1 %}selected{% endif %}>★☆☆☆☆ (1)</option>
+                                <option value="2" {% if user_review and user_review.rating == 2 %}selected{% endif %}>★★☆☆☆ (2)</option>
+                                <option value="3" {% if user_review and user_review.rating == 3 %}selected{% endif %}>★★★☆☆ (3)</option>
+                                <option value="4" {% if user_review and user_review.rating == 4 %}selected{% endif %}>★★★★☆ (4)</option>
+                                <option value="5" {% if user_review and user_review.rating == 5 %}selected{% endif %}>★★★★★ (5)</option>
+                            </select>
+                            
+                            <p class="fw-semibold mb-2 text-white">Your Review</p>
+                            <textarea name="comment_text"
+                                    class="form-control rr-review-textarea mb-3"
+                                    rows="4"
+                                    placeholder="Share your thoughts about this book..."
+                                    required>{% if user_review %}{{ user_review.comment_text }}{% endif %}</textarea>
+                            
+                            <button type="submit" class="btn rr-btn-red px-4">
+                                {% if user_review %}Update Review{% else %}Publish Review{% endif %}
+                            </button>
+                        </form>
                     </div>
-                    <div class="rr-stars mb-2">
-                        {% for i in "12345" %}
-                            {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
-                        {% endfor %}
-                    </div>
-                    <p class="text-white mb-0">{{ review.comment_text }}</p>
-                </div>
-            {% endfor %}
+                {% else %}
+                    <p class="text-secondary">
+                        Please <a href="{% url 'BookRealm:login' %}?next={{ request.path|urlencode }}" class="rr-link-red">log in</a> to write a review.
+                    </p>
+                {% endif %}
+            </div>
+        </section>
+        <!-- Rewies Section -->
+        {% if reviews %}
+        <section class="px-4 pb-5">
+            <div class="container-fluid">
 
+                <h2 class="fw-bold mb-4 text-white">Reviews</h2>
+
+                {% for review in reviews %}
+                    <div class="rr-review-item p-4 rounded mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold text-white">
+                                <i class="bi bi-person-circle me-1 text-secondary"></i>
+                                {{ review.user.username }}
+                            </span>
+                            <span class="text-secondary small">{{ review.created_at|date:"d M Y" }}</span>
+                        </div>
+                        <div class="rr-stars mb-2">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+                            {% endfor %}
+                        </div>
+                        <p class="text-white mb-0">{{ review.comment_text }}</p>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </section>
+        {% endif %}
+    
+    {% else %}
+        <div class="px-4 py-5">
+            <p class="text-secondary">No book selected.</p>
         </div>
-    </section>
     {% endif %}
- 
-{% else %}
-    <div class="px-4 py-5">
-        <p class="text-secondary">No book selected.</p>
-    </div>
-{% endif %}
  
 {% endblock body_block %}
 
