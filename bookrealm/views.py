@@ -266,7 +266,7 @@ def edit_profile(request):
             profile_form.save()
             if user_form.cleaned_data.get('password'):
                 update_session_auth_hash(request, user)       
-            messages.success(request, 'Profilo aggiornato con successo!')
+            messages.success(request, 'Profile updated successfully!')
             return redirect('BookRealm:user_page')
     else:
         user_form = UserForm(instance=request.user)
