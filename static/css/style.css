@@ -43,9 +43,20 @@
     opacity: 0.8 !important;
 }
 
-.rr-search-input::-webkit-input-placeholder { color: var(--rr-muted) !important; opacity: 0.8; }
-.rr-search-input::-moz-placeholder { color: var(--rr-muted) !important; opacity: 0.8; }
-.rr-search-input:-ms-input-placeholder { color: var(--rr-muted) !important; opacity: 0.8; }
+.rr-search-input::-webkit-input-placeholder { 
+    color: var(--rr-muted) !important;
+     opacity: 0.8; 
+
+    }
+.rr-search-input::-moz-placeholder {
+     color: var(--rr-muted) !important;
+      opacity: 0.8; 
+}
+
+.rr-search-input:-ms-input-placeholder {
+     color: var(--rr-muted) !important;
+      opacity: 0.8; 
+}
 
 .rr-nav-link {
     color: var(--rr-text) !important;
@@ -362,20 +373,17 @@
 .rr-author-avatar {
     width: 38px;
     height: 38px;
-    /* Forza il contenitore a NON allargarsi mai, anche se l'immagine è enorme */
     flex-shrink: 0; 
     overflow: hidden;
     position: relative;
-    border-radius: 50% !important; /* Forza la forma circolare */
+    border-radius: 50% !important;
 }
 
 .rr-author-avatar img {
-    display: block; /* Toglie spazi vuoti alla base dell'immagine */
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Non serve border-radius sull'immagine se l'overflow del padre funziona, 
-       ma metterlo non guasta */
     border-radius: 50%;
 }
 
@@ -504,8 +512,6 @@
         text-align: center;
     }
 }
-
-/* Bootstrap overrides */
 
 /* Force white on elements Bootstrap renders grey in dark context */
 .card-title,

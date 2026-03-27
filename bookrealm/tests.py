@@ -161,3 +161,4 @@ class WishlistTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Wishlist.objects.count(), 1)
+        
