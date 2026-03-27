@@ -14,6 +14,8 @@ from django.http import JsonResponse
 from .forms import UserForm, UserProfileForm
 
 # Create your views here.
+
+# Helper function
 def get_safe_next_url(request):
     next_url = request.POST.get('next') or request.GET.get('next')
     if next_url and url_has_allowed_host_and_scheme(
@@ -318,11 +320,6 @@ def user_logout(request):
     logout(request)
     messages.success(request, "You have been logged out.")
     return redirect(reverse('BookRealm:home'))
-
-@login_required
-def my_reviews(request):
-    response = render(request, 'bookrealm/myReviews.html')
-    return response
 
 @login_required
 def publish_book(request):
